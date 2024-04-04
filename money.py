@@ -1,1 +1,1 @@
-print("Make money")
+print("Make money two")
