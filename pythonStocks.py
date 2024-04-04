@@ -12,7 +12,6 @@ class Stock:
     max_dampener = 0.8  # this should be experimented with
     sell_rate = 0.15
     max_EPS_growth = 0.60  # this should be experimented with, but less priority
-
     target_rate = 0.18  # Define target_rate as a class attribute
 
     def __init__(self, stock_name, ticker, EPS_2023, EPS_growth, PE, current_price):
@@ -91,7 +90,7 @@ class Stock:
                 print(f"Using PE of {PE} and most recent EPS of {self.EPS_2023}, the model's predicted interest rate is ")
                 print(self.predict_interest_rate(PE))
                 self.target_prices(PE)
-
+    
     def determine_dampener(self):
         dampener = self.max_dampener
         for growth in self.EPS_growth:
@@ -101,13 +100,16 @@ class Stock:
             dampener += 0.1
         return dampener
 
+    # Determine the number of years with negative EPS growth
     def determine_num_of_negative_growths(self):
         return sum(1 for growth in self.EPS_growth if growth < 0)
 
 
 if __name__ == "__main__":
+    # Input is a list of Earnings per Share (EPS) and Price to Earnings (PE) ratios
     TPLEPS = [0.31, 0.4730, -0.1330, 1.3400, 1.1750, 0.5260, -0.4480, 0.5340, 0.6590, -0.0870]
     TPLPE = [28.25, 21.24, 55.65, 35.93, 20.04, 19.01, 32.03, 35.88, 40.42, 29.73]
 
+    # Input the stock's name, ticker, EPS for 2023, EPS growth, PE, and current price
     tpl = Stock("Texas Pacific Land", "TPL", 52.77, TPLEPS, TPLPE, 1650)
     tpl.evaluate()
