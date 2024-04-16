@@ -21,6 +21,7 @@ STOCK Object (Output):
     - EPS
     - EPS_growth
     - Years_with_positive_EPS
+    - dampener
 
 FUNCTION
 Our goal is to go through the EPS data and filter out the stocks that have below 8 years of EPS growth (simple function)
