@@ -5,6 +5,40 @@ Created on Mon Mar 18 17:00:53 2024
 @author: atom2
 """
 
+"""
+DOCUMENTATION: input.py
+
+Input: An array of stock objects
+Output: An array of stock objects (w/ buy sell price)
+
+STOCK Object (input):
+    - stock_name
+    - ticker
+    - current_price
+    - PE
+    - EPS
+    - EPS_growth
+    - Years_with_positive_EPS
+
+STOCK Object (output):
+    - stock_name
+    - ticker
+    - current_price
+    - PE
+    - EPS
+    - EPS_growth
+    - Years_with_positive_EPS
+    - buy_price
+    - sell_price
+    - projedted_interest_rate (givenc current price)
+
+FUNCTION
+Our goal is to go through an API and get all the data and produce
+
+"""
+
+
+
 import numpy as np
 
 class Stock:

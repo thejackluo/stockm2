@@ -14,7 +14,6 @@ STOCK Object:
 
 FUNCTION
 Our goal is to go through an API and get all the data and produce
-
 """
 
 from dotenv import load_dotenv
