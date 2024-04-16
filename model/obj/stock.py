@@ -3,6 +3,7 @@ Stock object class
 
 TODO: write documentations for each method
 """
+import numpy as np
 
 class Stock:
     # subjective parameters (ordered by priority)
@@ -25,7 +26,16 @@ class Stock:
 
     # General Util
     def __str__(self):
-        return f"{self.stock_name} ({self.ticker}) - Current Price: {self.current_price}"
+        # please print the entire stock object
+        return f"Stock: {self.stock_name} ({self.ticker})\n" + \
+            f"EPS 2023: {self.EPS_2023}\n" + \
+            f"EPS Growth: {self.EPS_growth}\n" + \
+            f"PE: {self.PE}\n" + \
+            f"Current Price: {self.current_price}\n" + \
+            f"Average PE: {self.avg_PE}\n" + \
+            f"Dampener: {self.dampener}\n"
+
+        # return f"{self.stock_name} ({self.ticker}) - Current Price: {self.current_price}"
 
     # EPS Module
     @staticmethod
