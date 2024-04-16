@@ -62,7 +62,7 @@ print("S1: Client Success, current usage:", client.get_usage())
 
 
 # get 10 years eps growth for the test stocks 
-resp = client.get_data_batch(companies=test_stocks, metrics=['eps_diluted_growth'], period="FY-10:FY")
+resp = client.get_data_batch(companies=test_stocks, metrics=['eps_diluted_growth'], period="FY-9:FY")
 
 # Check the status of the call
 print("S2: client resp", client.resp) # If it says 207, you have content to use.
