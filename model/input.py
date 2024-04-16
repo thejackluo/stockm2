@@ -19,6 +19,8 @@ from quickfs import QuickFS
 from all_stocks import all_stocks
 from obj.stock import Stock
 import os
+import json
+import pandas as pd
 
 # S0: Input (US indexes Russel 1000 + 2000 V2) (S&P 500 V1)
 
@@ -51,15 +53,10 @@ resp = client.get_data_batch(companies=test_stocks, metrics=['eps_diluted_growth
 print("S2: client resp:", client.resp) # If it says 207, you have content to use.
 print("S2: client content:", client.resp._content) # check the error
 
-# S3: OPTIONAL: convert into PANDAS dataframe for easier manipulation
-import json
-# filter and extract for the companies that you have data
-special_ = json.loads(client.resp._content.decode('utf-8'))['data']
-# transform it to a pandas dataframe (if you want it)
-import pandas as pd
-special_ = pd.DataFrame(special_)
-
-
+# S3: convert into PANDAS dataframe for easier manipulation
+pd_stocks = json.loads(client.resp._content.decode('utf-8'))['data'] # filter and extract for the companies that you have data
+pd_stocks = pd.DataFrame(pd_stocks) # transform it to a pandas dataframe (if you want it)
+print("S3: organized stocks", pd_stocks)
 
 # ARCHIVES
 # Stock 1: AAPL
