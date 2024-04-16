@@ -12,7 +12,7 @@ class Stock:
     max_EPS_growth = 0.60  # this should be experimented with, but less priority
     target_rate = 0.18  # Define target_rate as a class attribute
 
-    # attributes
+    # Attributes
     def __init__(self, stock_name, ticker, EPS_2023, EPS_growth, PE, current_price):
         self.stock_name = stock_name
         self.ticker = ticker
