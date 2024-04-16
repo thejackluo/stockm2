@@ -6,9 +6,9 @@ Output: An array of GOOD Stock Object and An array of REJECTED stocks (for refer
 
 
 STOCK Object (Input):
-    - stock_name
+    - stock_name (TODO)
     - ticker
-    - current_price
+    - current_price (TODO)
     - PE
     - EPS
     - EPS_growth
