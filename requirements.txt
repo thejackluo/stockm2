@@ -1,3 +1,4 @@
 numpy==1.26.4 # numerical processing
 pandas==2.2.1 # processing csv (for testing)
 python-dotenv==0.19.1 # loading environment variables
+quickfs==0.1.1 # fetching financial data from quickFS

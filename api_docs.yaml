@@ -1,0 +1,860 @@
+swagger: '2.0'
+info:
+  title: QuickFS Public API
+  version: "1.0.0"
+  description: |+
+    # Introduction
+    The QuickFS API allows you to programmatically retrieve financial statement data, key ratios, and company metadata for U.S., Canadian, and Australian stocks. It is organized around REST and returns JSON for all responses, including errors. Developers familiar with RESTful, JSON APIs should have no problem getting started. If you need assistance or have questions about the API or this documentation, send us an email at [api@quickfs.net](mailto:api@quickfs.net).
+
+    <br/>
+
+    > #### Share your experience with us!
+    >
+    > If you have any comments regarding
+    >  our API or experience any difficulties using it, we'd love to hear about it at
+    >  [api@quickfs.net](mailto:api@quickfs.net).
+
+
+    # Authentication
+
+    You can find your API key on your <a href="https://quickfs.net/account" target="_blank">QuickFS account page</a>. Please do not share your API key with anyone, as your account is licensed for individual use only and any requests made with your key will count against your account's [daily data quota](#section/Limits-and-Quotas). Should your API key be compromised, please contact [api@quickfs.net](mailto:api@quickfs.net) to generate a new key and revoke the old one. 
+    
+    Once you have your API key, you may use one of two methods to authenticate your requests: include your api key as a query parameter, or include your api key as a header.
+
+    #### Query Parameter
+
+    Any GET request can be authenticated by including your API key as a query parameter called "api_key". For example: https://public-api.quickfs.net/v1/data/IBM/revenue?period=FY&api_key={your Api Key}
+
+    #### X-QFS-API-Key Header
+
+    Alternatively, you may provide your API key in a header called **X-QFS-API-Key**. For example, `X-QFS-API-Key: {your Api Key}`.
+
+    # Errors
+
+    QuickFS uses convential HTTP response codes to indicate the success or failure of an API request. In general, codes in the **2xx** range indicate success, codes in the **4xx** range indicate an error that failed given the information provided (e.g., a required parameter was omitted, a company is not supported, etc.), and codes in the **5xx** range indicate an error with our servers (these are rare).
+
+    When multiple datapoints are requested via a batch or range request and one or more of the datapoints results in an error, we will still return any successfully resolved data with a **207** status code, along with a list of errors indicating which datapoints could not be resolved. Below is a list of error types that may be returned from our API.
+
+    <br>
+
+    | Status | Error | Description |
+    | --- | --- | --- |
+    | 400 | InvalidPeriodError | The period you sent is not a valid period. |
+    | 404 | UnsupportedMetricError | The metric you requested is not supported. |
+    | 404 | UnsupportedCompanyError | The company you requested is not supported. |
+    | 413 | BatchLimitExceededError | You sent a batch request with too many keys. Try breaking up your request. |
+    | 429 | InsufficientQuotaError | You have exhausted your datapoint quota. Wait a bit before trying to request more data. |
+
+    # Limits and Quotas
+
+    QuickFS Premium subscribers have full access to all QuickFS data with a daily API quota of 25,000. Free users have a smaller quota but retain access to the full database. Post-trial Premium subscribers may request a higher daily quota by sending a quick email to our api support team: [api@quickfs.net](mailto:api@quickfs.net).
+
+    <br/>
+    | Subscription | Quota
+    | --- | ---
+    | Free | 500 per day
+    | Premium | 25,000 per day
+
+    <br/>
+    ### What Counts Towards Your Quota?
+    The QuickFS API allows you to retrieve data for multiple companies, multiple metrics, and multiple time periods in a single request. Each distinct metric (e.g., Revenue) returned from a request is counted as one data call and deducted from your quota. Take, for example, the following request:
+
+    ```
+    GET /v1/data/IBM/revenue?period=FY-9:FY
+    ```
+
+    Requesting all annual revenue figures for **IBM** from **10 years ago** to its **most-recent fiscal year** will reduce your available quota by 1, because it returns just one distinct metric ("revenue"). Requests for metrics that contain errors are not counted against your quota.
+    
+    Only paths that contain **/v1/data** or **/v1/companies/updated/** count against your quota. Other API paths may be queried without reducing your allotment.
+    
+    <br/>
+
+    ### Checking Your Usage
+    We offer an [API endpoint](#tag/Usage-History) to check your current quota usage. Quotas are reset nightly at midnight Eastern Time.
+
+    <br/>
+
+    ### Requesting A Limit Increase
+    If you're exhausting your datapoint or rate limits and would like to request an increase, please contact us at [api@quickfs.net](mailto:api@quickfs.net). We'd love to discuss your use case and design a plan that works for you.
+    
+    # Python SDK
+    A user-created Python SDK for the QuickFS API is available on Github: https://github.com/LautaroParada/quickfs
+    
+    The SDK provides additional functions that can streamline your code for querying our API. It is not officially maintained by QuickFS.
+
+  contact:
+    name: API Support
+    url: 'https://quickfs.net/support'
+    email: api@quickfs.net
+  x-logo:
+    url: 'https://quickfs.net/assets/img/logo.png'
+  termsOfService: 'https://quickfs.net/terms'
+host: public-api.quickfs.net
+basePath: /v1
+securityDefinitions:
+  apiKeyQueryParam:
+    type: apiKey
+    in: query
+    name: api_key
+  apiKeyAuthHeader:
+    type: apiKey
+    in: header
+    name: X-QFS-API-Key
+schemes:
+  - https
+produces:
+  - application/json
+consumes:
+  - application/json
+paths:
+  /usage:
+    get:
+      summary: View API Quota
+      description: Returns your current API usage and limits
+      consumes: []
+      produces:
+        - application/json
+      tags:
+        - Usage History
+      parameters: []
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/ApiUsage'
+          examples:
+            application/json:
+              usage:
+                quota:
+                  used: 34
+                  remaining: 2500
+                  resets: '2019-08-26T22:00:00Z'
+        '401':
+          description: AuthenticationRequired
+          schema:
+            $ref: '#/definitions/RequestError'
+          examples:
+            application/json:
+              status: 401
+              error: AuthenticationRequiredError
+              description: This API call requires authenticated access          
+      security:
+        - apiKeyQueryParam: []
+        - apiKeyAuthHeader: []
+  '/companies[/{country}][/{exchange}]':
+    get:
+      summary: List Supported Companies
+      description: Returns a list of ticker symbols supported by QuickFS.net. You may optionally specify a country code (US, CA, MM, AU, NZ, or LN) and an exchange.
+      produces:
+        - application/json
+      tags:
+        - Companies
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/CompaniesList'
+          examples:
+            application/json:
+              data:
+                ['A:US','AHC:US','AISSF:US','AIS:US','...']
+        '401':
+          description: AuthenticationRequired
+          schema:
+            $ref: '#/definitions/RequestError'
+          examples:
+            application/json:
+              status: 401
+              error: AuthenticationRequiredError
+              description: This API call requires authenticated access
+        '403':
+          description: Restricted
+          schema:
+            $ref: '#/definitions/RequestError'
+          examples:
+            application/json:
+              status: 403
+              error: RestrictedQueryError
+              description: 'This query is only available to [premium subscribers](https://quickfs.net/upgrade). Please upgrade your account to use this feature.'
+      security:
+        - apiKeyQueryParam: []
+        - apiKeyAuthHeader: []
+      parameters:
+        - in: path
+          name: country
+          required: false
+          type: string
+        - in: path
+          name: exchange
+          required: false
+          type: string
+  '/companies/updated/{date}[/{country}]':
+    get:
+      summary: List Recently-Updated Companies
+      description: Returns a list of ticker symbols that were updated with new financial data on or after the specified date (formatted as YYYYMMDD). You may optionally specify a country code (US, CA, MM, AU, NZ, or LN).
+      produces:
+        - application/json
+      tags:
+        - Companies
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/CompaniesList'
+          examples:
+            application/json:
+              data:
+                ["MDSVF:US","RDTK:US","CGSXF:US","CXXMF:US","..."]
+        '401':
+          description: AuthenticationRequired
+          schema:
+            $ref: '#/definitions/RequestError'
+          examples:
+            application/json:
+              status: 401
+              error: AuthenticationRequiredError
+              description: This API call requires authenticated access
+        '403':
+          description: Restricted
+          schema:
+            $ref: '#/definitions/RequestError'
+          examples:
+            application/json:
+              status: 403
+              error: RestrictedQueryError
+              description: 'This query is only available to [premium subscribers](https://quickfs.net/upgrade). Please upgrade your account to use this feature.'
+      security:
+        - apiKeyQueryParam: []
+        - apiKeyAuthHeader: []
+      parameters:
+        - in: path
+          name: date
+          required: true
+          type: string
+        - in: path
+          name: country
+          required: false
+          type: string
+  /metrics:
+    get:
+      summary: List Available Metrics
+      description: Returns a list of available metrics with associated metadata
+      consumes: []
+      produces:
+        - application/json
+      tags:
+        - Metrics
+      parameters: []
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/Metrics'
+          examples:
+            application/json:
+              data:
+                - metric: revenue
+                  periods:
+                    - FY
+                    - FQ
+                  data_type: number
+                  statement_type: income_statement
+                  company_types: ["normal","insurance","bank"]
+                - metric: total_interest_income
+                  periods:
+                    - FY
+                    - FQ
+                  data_type: number
+                  statement_type: income_statement
+                  company_types: ["bank"]        
+  '/data/{symbol}/{metric}':
+    get:
+      summary: Data Ranges
+      description: |
+        Resolve a range of datapoints for a single company metric. Here are a few sample requests to get you started:
+
+        <b><u><a href="/v1/data/IBM/revenue?period=FY-19:FY&api_key={your_api_key}" target="_blank">20 years of historical revenue for International Business Machines Corp.</a></u></b>
+
+            GET /v1/data/IBM/revenue?period=FY-19:FY&api_key={your_api_key}
+
+        <b><u><a href="/v1/data/FFH:CA/mkt_cap?api_key={your_api_key}" target="_blank">Current market capitalization of Fairfax Financial Holdings Ltd</a></u></b>
+
+            GET /v1/data/FFH:CA/mkt_cap?api_key={your_api_key}
+
+        > Notice that the query for the Canadian-listed Fairfax Financial includes **:CA** as part of the ticker symbol. It's better to use the country identifier code for non-U.S. stocks. If you do not specify a country, the API will first try to match a U.S.-listed symbol and, if none is found, will then match with a non-U.S. company with the same symbol.
+      produces:
+        - application/json
+      tags:
+        - Datapoints
+      parameters:
+        - name: symbol
+          in: path
+          required: true
+          type: string
+          description: 'Company symbol or qfs_symbol (e.g. **BRK.A** or **BRK.A:US**)'
+        - name: metric
+          in: path
+          required: true
+          type: string
+          description: QuickFS metric name (e.g. **eps_diluted**)
+        - name: period
+          in: query
+          description: Period or period range
+          required: false
+          type: string
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/DatapointRange'
+          examples:
+            application/json:
+              data:
+                - 1.63
+                - 18.22
+                - 9.76
+        '207':
+          description: Partial Success
+          schema:
+            $ref: '#/definitions/DatapointRangeErrors'
+          examples:
+            application/json:
+              data:
+                - 168020
+                - 152492
+                - null
+                - 131590
+              errors:
+                - status: 404
+                  error: UnsupportedCompanyError
+                  description: The company you requested is not supported.
+                  message: The company JKDJF is not supported.
+        '401':
+          description: AuthenticationRequired
+          schema:
+            $ref: '#/definitions/RequestError'
+          examples:
+            application/json:
+              status: 401
+              error: AuthenticationRequiredError
+              description: This API call requires authenticated access      
+        '403':
+          description: Restricted
+          schema:
+            $ref: '#/definitions/RequestError'
+          examples:
+            application/json:
+              status: 403
+              error: RestrictedQueryError
+              description: 'This query is only available to [premium subscribers](https://quickfs.net/upgrade). Please upgrade your account to use this feature.'      
+        '404':
+          description: Not Found
+          schema:
+            $ref: '#/definitions/RequestError'
+          examples:
+            application/json:
+              status: 404
+              error: UnsupportedCompanyError
+              description: The company you requested is not supported.
+        '429':
+          description: Limit Exceeded
+          schema:
+            $ref: '#/definitions/RequestError'
+          examples:
+            application/json:
+              status: 429
+              error: InsufficientQuotaError
+              description: You have exhausted your datapoint quota. Wait a bit before trying to request more data.
+  '/data/all-data/{symbol}':
+    get:
+      summary: Full Datasets
+      description: |
+        Pull metadata and all financial statements (annual and quarterly) for all periods for a single stock in one API call. For example:
+
+            GET https://public-api.quickfs.net/v1/data/all-data/IBM:US?api_key={your_api_key}
+
+        Successful calls to this endpoint count are counted as 1 datapoint against your daily quota.
+      produces:
+        - application/json
+      tags:
+        - Datapoints
+      parameters:
+        - name: symbol
+          in: path
+          required: true
+          type: string
+          description: 'Company symbol or qfs_symbol (e.g. **IBM** or **IBM:US**)'
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: ''
+          examples:
+            application/json:
+              data:
+                qfs_symbol_v2: IBM:US
+                exchange: NYSE
+                template_type: normal
+                financials:
+                  quarterly:
+                    period_end_date:
+                        - 2001-03
+                        - 2001-06
+                        - 2001-09
+                        - ...etc
+                    revenue:
+                        - 20309000000
+                        - 20834000000
+                        - 19783000000
+                        - ...etc
+                    ...etc:
+                  annual:
+                    period_end_date:
+                        - 2000-12
+                        - 2001-12
+                        - 2002-12
+                        - ...etc 
+                metadata:
+                    sector: Information Technology
+                    description: "Full text description"
+                    exchange: NYSE
+                    symbol: IBM
+                    qfs_symbol: IBM:US
+                    currency: USD
+                    gics: 45102010
+                    name: International Business Machines Corporation
+                    country: US
+                    industry: Software and Services
+        '401':
+          description: AuthenticationRequired
+          schema:
+            $ref: '#/definitions/RequestError'
+          examples:
+            application/json:
+              status: 401
+              error: AuthenticationRequiredError
+              description: This API call requires authenticated access      
+        '403':
+          description: Restricted
+          schema:
+            $ref: '#/definitions/RequestError'
+          examples:
+            application/json:
+              status: 403
+              error: RestrictedQueryError
+              description: 'This query is only available to [premium subscribers](https://quickfs.net/upgrade). Please upgrade your account to use this feature.'      
+        '404':
+          description: Not Found
+          schema:
+            $ref: '#/definitions/RequestError'
+          examples:
+            application/json:
+              status: 404
+              error: UnsupportedCompanyError
+              description: The company you requested is not supported.
+        '429':
+          description: Limit Exceeded
+          schema:
+            $ref: '#/definitions/RequestError'
+          examples:
+            application/json:
+              status: 429
+              error: InsufficientQuotaError
+              description: You have exhausted your datapoint quota. Wait a bit before trying to request more data.
+  /data/batch:
+    post:
+      summary: Batch Requests
+      description: |+
+        Batch requests allow you to retrieve multiple metrics in a single API call that returns a customized JSON document.
+
+        To utilize the batch request endpoint, simply construct a JSON object containing the QFS() function that you'd like to resolve as leaf nodes and POST it to the API in the **data** field of your request body. The response will return your data structure with datapoints resolved in-line.
+
+        Here's a sample request body to give you an idea of how this works:
+
+        <br>
+
+        <b>Comparing Return on Assets and Return on Invested Capital for multiple companies</b>
+
+        ```
+        {
+          "data": {
+            "roa" : {
+              "Coca-Cola Co" : "QFS(KO:US,roa,FY-2:FY)",
+              "PepsiCo" : "QFS(PEP:US,roa,FY-2:FY)"
+             },
+            "roic" : {
+              "Coca-Cola Co" : "QFS(KO:US,roic,FY-2:FY)",
+              "PepsiCo" : "QFS(PEP:US,roic,FY-2:FY)"
+             }
+          }
+        }
+        ```
+
+        *resolves to*
+
+        ```
+        {
+          "data": {
+            "roa" : {
+              "Coca-Cola Co" : [0.0736, 0.0142, 0.0752],
+              "PepsiCo" : [0.0884, 0.0633, 0.1589]
+             },
+            "roic" : {
+              "Coca-Cola Co" : [0.1058, 0.0202, 0.1087],
+              "PepsiCo" : [0.1678, 0.1232, 0.3207]
+             }
+          }
+        }
+        ```
+
+        <br>
+
+        The structure of the request body under **data** is completely arbitrary. This gives you the power to design your own data structures, post them to our server, and get the results back in a format that suits your purpose.
+
+        <br>
+        
+        <b>Full Python example:</b>
+        
+        ```
+        import requests, json
+
+        api_key = ""
+
+        header = {'x-qfs-api-key': api_key}
+
+        request_body = {
+            "data" : {
+                "roa" : {
+                    "Coca-Cola Co" : "QFS(KO:US,roa,FY-2:FY)",
+                    "PepsiCo" : "QFS(PEP:US,roa,FY-2:FY)"
+                 },
+                "roic" : {
+                    "Coca-Cola Co" : "QFS(KO:US,roic,FY-2:FY)",
+                    "PepsiCo" : "QFS(PEP:US,roic,FY-2:FY)"
+                 }
+            }
+        }
+
+        r = requests.post("https://public-api.quickfs.net/v1/data/batch",json=request_body,headers=header)
+
+        print(r.status_code, r.reason)
+        my_data = r.json()
+        print(my_data)
+
+        ```
+        
+      security:
+        - apiKeyAuthHeader: []
+      produces:
+        - application/json
+      tags:
+        - Datapoints
+      parameters:
+        - name: body
+          in: body
+          schema:
+            $ref: '#/definitions/BatchRequest'
+        - name: X-QFS-API-Key
+          in: header
+          type: string
+          required: true
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/DatapointBatch'
+          examples:
+            application/json:
+              data:
+                name: ExampleCompany Name
+                exchange: Example Exchange
+                market:
+                  price: 145.01
+                  beta: 0.45
+                  pe: 3.4
+                income_statement:
+                  revenue: 168010
+                  net_income: 148891
+                  ebitda: 140801
+                balance_sheet:
+                  assets: 84260
+                  liabilities: 1200
+                  equity: 83060
+        '207':
+          description: Partial Success
+          schema:
+            $ref: '#/definitions/DatapointBatchErrors'
+          examples:
+            application/json:
+              data:
+                name: ExampleCompany Name
+                exchange: ExampleExchange
+                address: UnsupportedMetricError
+                market:
+                  price: 145.01
+                  beta: 0.45
+                  pe: 3.4
+                income_statement:
+                  revenue: 168010
+                  net_income: 148891
+                  ebitda: 140801
+                balance_sheet:
+                  assets: 84260
+                  liabilities: 1200
+                  equity: 83060
+              errors:
+                - status: 404
+                  error: UnsupportedMetricError
+                  description: The metric you requested is not supported.
+                  message: The metric "employees" is not supported.
+        '401':
+          description: AuthenticationRequired
+          schema:
+            $ref: '#/definitions/RequestError'
+          examples:
+            application/json:
+              status: 401
+              error: AuthenticationRequiredError
+              description: This API call requires authenticated access          
+        '403':
+          description: Restricted
+          schema:
+            $ref: '#/definitions/RequestError'
+          examples:
+            application/json:
+              status: 403
+              error: RestrictedQueryError
+              description: 'This query is only available to [premium subscribers](https://quickfs.net/upgrade). Please upgrade your account to use this feature.'
+        '413':
+          description: Request Too Large
+          schema:
+            $ref: '#/definitions/RequestError'
+          examples:
+            application/json:
+              status: 413
+              error: BatchLimitExceededError
+              description: You sent a batch request with too many keys. Please break up your request into multiple smaller requests.
+        '429':
+          description: Limit Exceeded
+          schema:
+            $ref: '#/definitions/RequestError'
+          examples:
+            application/json:
+              status: 429
+              error: InsufficientQuotaError
+              description: You have exhausted your daily datapoint quota.
+definitions:
+  ApiUsage:
+    title: ApiUsage
+    type: object
+    required:
+      - usage
+    properties:
+      usage:
+        type: object
+        properties:
+          quota:
+            type: object
+            required: 
+              - used
+              - remaining
+              - resets
+            properties:
+              used:
+                type: integer
+              remaining:
+                type: integer
+              resets:
+                type: string
+  BatchRequest:
+    title: BatchRequest
+    type: object
+    required:
+      - data
+    properties:
+      data:
+        description: Custom schema to be resolved              
+  CompaniesList:
+    title: CompaniesList
+    type: object
+    required:
+      - data
+    properties:
+      data:
+        type: array
+        description: An array of ticker symbols
+        items:
+          type: string
+  DatapointRange:
+    title: DatapointRange
+    type: object
+    required:
+      - data
+    properties:
+      data:
+        type: array
+        description: List of resolved datapoint values
+        items:
+          type: number
+  DatapointBatch:
+    title: DatapointBatch
+    type: object
+    required:
+      - data
+    properties:
+      data:
+        description: Datapoint values resolved to match structure of request body
+  DatapointBatchErrors:
+    title: DatapointBatchErrors
+    allOf:
+      - $ref: '#/definitions/DatapointBatch'
+    required:
+      - errors
+    properties:
+      errors:
+        type: array
+        description: List of errors for failed datapoints
+        items:
+          $ref: '#/definitions/DatapointError'      
+  DatapointRangeErrors:
+    title: DatapointRangeErrors
+    allOf:
+      - $ref: '#/definitions/DatapointRange'
+    required:
+      - errors
+    properties:
+      errors:
+        type: array
+        description: List of errors for failed datapoints
+        items:
+          $ref: '#/definitions/DatapointError'
+  DatapointError:
+    title: DatapointError
+    allOf:
+      - $ref: '#/definitions/RequestError'
+    properties:
+      path:
+        description: JSONPath of failed datapoint in request body
+        type: string
+  Metrics:
+    title: Metrics
+    type: object
+    required:
+      - data
+    properties:
+      data:
+        type: array
+        description: List of available metrics
+        items:
+          $ref: '#/definitions/Metric'
+  Metric:
+    title: Metric
+    type: object
+    required:
+      - metric
+      - data_type
+      - company_types
+    properties:
+      metric:
+        type: string
+        description: Metric name
+      data_type:
+        $ref: '#/definitions/DataType'
+      company_types:
+        type: array
+        description: Company types that have this metric available for use
+        uniqueItems: true
+        items:
+          $ref: '#/definitions/CompanyType'
+      periods:
+        type: array
+        description: Supported periods for this metric
+        uniqueItems: true
+        items:
+          $ref: '#/definitions/PeriodType'
+      statement_type:
+        type: string
+        description: The financial statement to which this metric belongs
+  CompanyType:
+    title: CompanyType
+    type: string
+    enum:
+      - normal
+      - insurance
+      - bank
+  PeriodType:
+    title: PeriodType
+    type: string
+    enum:
+      - FY
+      - FQ
+  DataType:
+    title: DataType
+    type: string
+    description: Datatype of expected values
+    enum:
+      - number
+      - string
+  RequestError:
+    title: RequestError
+    type: object
+    required:
+      - status
+      - error
+      - description
+    properties:
+      status:
+        type: number
+        description: The error status code
+      error:
+        type: string
+        description: The error type identifier
+      description:
+        type: string
+        description: Useful description of the error. May include cause and possible resolutions.
+      message:
+        type: string
+        description: Error message that applies to the specific case (e.g., which symbol is unsupported).
+tags:
+  - name: Companies
+    description: |+ 
+      QuickFS.net supports over 20,000 stocks listed on exchanges in the United States, Canada, and Australia. If you need data for a company we don't currently support, send us a note at [api@quickfs.net](mailto:api@quickfs.net) and we'll do our best to accommodate you.
+      
+      <br/>
+      
+      | Country | Code | Exchanges |
+      | --- | --- | --- |
+      | United States | US | NYSE, NASDAQ, OTC,  NYSEARCA,  BATS,  NYSEAMERICAN |
+      | Canada | CA | TORONTO,  CSE,  TSXVENTURE |
+      | Australia | AU | ASX |
+      | New Zealand | NZ | NZX |
+      | Mexico | MM | BMV |
+      | London | LN | LONDON |
+  - name: Metrics
+    description: |
+      QuickFS standardizes and computes hundreds of metrics for each of the companies in our database. Financial metrics may contain up to 20 years and 80 quarters of historical data. You can view available metrics via the /metrics API endpoint or download the [QuickFS Excel Add-in Reference](https://api.quickfs.net/xlam/releases/download/quickfs-addin-reference.xlsx), which uses the same variables.
+  - name: Datapoints
+    description: |+
+      QuickFS gives API users full access to all of the data we use to on QuickFS.net and in the QuickFS Excel Add-in. This includes hundreds of metrics for every company we support, covering everything from quarterly and annual financials to industry classification. All of this data is available via a simple REST endpoint!
+
+      ## Periods and Period Ranges
+      To standardize access to historical financial data that may have different reporting intervals, most metrics include a list of supported "periods". Periods allow you to select the reporting interval and calendar range of data you'd like to retrieve. For example, **revenue** is reported on a quarterly and annual basis, as determined by a company's fiscal calendar. The last 10 years of annual revenue figures is represented by the periods **FY-9** to **FY**. Similarly, the last 20 quarters of reported *quarterly* revenue is represented by periods **FQ-19** to **FQ**.
+
+      Periods can also be expressed as a range of data with the form **${from}:${to}**, which returns all data within the range. For instance, the period range `FQ-3:FQ` returns all data for a specified metric in the past four quarters.
+
+      <br/>
+
+      ## Batch Request Keys
+
+      To make a batch request, which allows you to resolve many metrics with a single API call, you'll need to use the QFS() function format:
+
+          QFS({symbol},{metric},{period})
+
+      <br>
+      To illustrate, the following string retrieves IBM's revenue for the past 10 years:
+
+          QFS(IBM,revenue,FY-9:FY)
+
+      <br>
+
+      Now that we've covered period ranges and the QuickFS request format, lets take a look at how we can leverage these concepts to take full advantage of the QuickFS API.
