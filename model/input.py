@@ -27,7 +27,10 @@ import pandas as pd
 
 # create a list of the three test stocks (1, 5, 12) ticker only no object
 print("INPUT TEST REPORT") # print the first 3 stock in the all stock list as testing purposes
-test_stocks = [all_stocks[1], all_stocks[5], all_stocks[12]]
+# test_stocks = [all_stocks[1], all_stocks[5], all_stocks[12]]
+
+# please list out the first 300 stocks for testing purposes
+test_stocks = all_stocks[:300]
 print("S0:", test_stocks) # AAPL, GOOGL, TSLA 
 
 # TODO: write a check for stocks whether they are in the US avaialble stocks (for backtesting purposes)
