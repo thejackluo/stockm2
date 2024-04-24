@@ -38,6 +38,8 @@ Our goal is to go through an API and get all the data and produce
 
 """
 
+# Original small model
+
 import numpy as np
 
 if __name__ == "__main__":
