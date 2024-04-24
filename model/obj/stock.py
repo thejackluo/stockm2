@@ -34,18 +34,23 @@ class Stock:
             f"PE: {self.PE}\n" + \
             f"Current Price: {self.current_price}\n" + \
             f"Average PE: {self.avg_PE}\n" + \
-            f"Dampener: {self.dampener}\n"
+            f"Dampener: {self.dampener}\n" + \
+            f"Average EPS: {self.avg_EPS}\n"
+
 
         # return f"{self.stock_name} ({self.ticker}) - Current Price: {self.current_price}"
 
     # EPS Module
     @staticmethod
+    # take the average eps growth and if it is lower than negative max eps growth or higher than max eps growth, clip it to the max eps growt
     def get_average_EPS_growth(EPS_growth):
-        EPS_growth = np.clip(EPS_growth, -self.max_EPS_growth, self.max_EPS_growth)
+        EPS_growth = np.clip(EPS_growth, -Stock.max_EPS_growth, Stock.max_EPS_growth)
         return np.mean(EPS_growth)
 
+# from the eps_growth array, sum up all the negative eps growth (below zero)
     def determine_num_of_negative_growths(self):
-        return sum(1 for growth in self.EPS_growth if growth < 0)
+        return len([growth for growth in self.EPS_growth if growth < 0])
+        # return sum(1 for growth in self.EPS_growth if growth < 0)
     
     # Buy Sell Module
     def get_average_PE(self):

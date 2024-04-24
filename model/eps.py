@@ -24,25 +24,20 @@ STOCK Object (Output):
     - dampener
 
 FUNCTION
-Our goal is to go through the EPS data and filter out the stocks that have below 8 years of EPS growth (simple function)
+Our goal is to go through the EPS data and filter out the stocks that have below 8 years of positive EPS growth (simple function)
 """
 
 from input import all_stocks
 
 print("EPS MODULE START")
 
-print("=========================")
-for stock in all_stocks:
-    print(stock)
-print("=========================")
-
-
 # filter by years of positive growth
 def filter_by_positive_growth(stocks):
     good_stocks = []
     rejected_stocks = []
     for stock in stocks:
-        if stock.determine_num_of_negative_growths() < 2:
+        print(stock.determine_num_of_negative_growths())
+        if stock.determine_num_of_negative_growths() <= 2:
             good_stocks.append(stock)
         else:
             rejected_stocks.append(stock)
@@ -61,18 +56,15 @@ print("GOOD STOCKS")
 print("=========================")
 for stock in good_stocks:
     print(stock)
-print("=========================")
 
-print("=========================")
 print("REJECTED STOCKS")
+print("=========================")
 for stock in rejected_stocks:
     print(stock)
-print("=========================")
 
-print("=========================")
 print("RANKED STOCKS")
+print("=========================")
 for stock in ranked_stocks:
     print(stock)
-print("=========================")
 
 
