@@ -41,8 +41,7 @@ class Stock:
     # EPS Module
     @staticmethod
     def get_average_EPS_growth(EPS_growth):
-        max_EPS_growth = 0.60
-        EPS_growth = np.clip(EPS_growth, -max_EPS_growth, max_EPS_growth)
+        EPS_growth = np.clip(EPS_growth, -self.max_EPS_growth, self.max_EPS_growth)
         return np.mean(EPS_growth)
 
     def determine_num_of_negative_growths(self):
