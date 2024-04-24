@@ -20,9 +20,9 @@ class Stock:
         self.EPS_2023 = EPS_2023
         self.EPS_growth = EPS_growth
         self.PE = PE
-        self.avg_PE = self.get_average_PE()
+        self.avg_PE = self.get_average_PE() # internal method
         self.current_price = current_price
-        self.dampener = self.determine_dampener()
+        self.dampener = self.determine_dampener() # internal method
 
     # General Util
     def __str__(self):

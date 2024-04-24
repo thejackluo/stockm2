@@ -26,3 +26,53 @@ STOCK Object (Output):
 FUNCTION
 Our goal is to go through the EPS data and filter out the stocks that have below 8 years of EPS growth (simple function)
 """
+
+from input import all_stocks
+
+print("EPS MODULE START")
+
+print("=========================")
+for stock in all_stocks:
+    print(stock)
+print("=========================")
+
+
+# filter by years of positive growth
+def filter_by_positive_growth(stocks):
+    good_stocks = []
+    rejected_stocks = []
+    for stock in stocks:
+        if stock.determine_num_of_negative_growths() < 2:
+            good_stocks.append(stock)
+        else:
+            rejected_stocks.append(stock)
+    return good_stocks, rejected_stocks
+
+# rank stock with sufficient positive growth (rank stocks based on the highest average eps growth over the 10 years from the good stocks) -
+# EPS growth for a year cannot exceed max_EPS_growth
+
+def rank_by_EPS_growth(stocks):
+    return sorted(stocks, key=lambda x: x.get_average_EPS_growth(x.EPS_growth), reverse=True)
+
+good_stocks, rejected_stocks = filter_by_positive_growth(all_stocks)
+ranked_stocks = rank_by_EPS_growth(good_stocks)
+
+print("GOOD STOCKS")
+print("=========================")
+for stock in good_stocks:
+    print(stock)
+print("=========================")
+
+print("=========================")
+print("REJECTED STOCKS")
+for stock in rejected_stocks:
+    print(stock)
+print("=========================")
+
+print("=========================")
+print("RANKED STOCKS")
+for stock in ranked_stocks:
+    print(stock)
+print("=========================")
+
+
