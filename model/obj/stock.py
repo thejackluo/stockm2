@@ -18,7 +18,8 @@ class Stock:
         self.stock_name = stock_name
         self.ticker = ticker
         self.EPS_2023 = EPS_2023
-        self.EPS_growth = EPS_growth
+        self.EPS_growth = EPS_growth # Array of 10yr EPS
+        self.avg_EPS = self.get_average_EPS_growth(EPS_growth) # internal method
         self.PE = PE
         self.avg_PE = self.get_average_PE() # internal method
         self.current_price = current_price
