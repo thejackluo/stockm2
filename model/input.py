@@ -30,18 +30,19 @@ print("INPUT TEST REPORT") # print the first 3 stock in the all stock list as te
 # test_stocks = [all_stocks[1], all_stocks[5], all_stocks[12]]
 
 # please list out the first 300 stocks for testing purposes
-test_stocks = all_stocks[:300]
+test_stocks = all_stocks[:10]
 print("S0:", test_stocks) # AAPL, GOOGL, TSLA 
 
 # TODO: write a check for stocks whether they are in the US avaialble stocks (for backtesting purposes)
 
 # S1: API Key and set up
-load_dotenv()  # take environment variables from .env.
+load_dotenv(override=True)  # take environment variables from .env.
 
 api_key = os.getenv('QUICKFS_API_KEY')
 
 if api_key:
     print("S1: API Key Success")
+    print(api_key)
 else:
     print("ERROR S1: Environment variable not found.")
 
@@ -71,24 +72,28 @@ print("S3: organized stocks", pd_stocks)
 # please ignore stock name, and also current prices for now (set name to TEST, and set current price to -1)
 
 # create a list of stock objects
-stock_objects = []
+all_stocks = []
 
 for i in range(len(test_stocks)):
-    stock_name = "TEST"
+    stock_name = "TEST" #TODO
     ticker = test_stocks[i]
-    EPS_2023 = 0
+    EPS_2023 = 0 #TODO
     EPS_growth = pd_stocks.loc[ticker, 'eps_diluted_growth']
     PE = pd_stocks.loc[ticker, 'price_to_earnings']
-    current_price = -1
+    current_price = -1 #TODO
 
     stock = Stock(stock_name, ticker, EPS_2023, EPS_growth, PE, current_price)
-    stock_objects.append(stock)
+    all_stocks.append(stock)
 
 
 # print the stock objects
 print("S4: Stock Objects")
-for stock in stock_objects:
+for stock in all_stocks:
     print(stock)
+
+
+# S5: Output the stock objects for the next module
+
 
 # ARCHIVES
 # Stock 1: AAPL
