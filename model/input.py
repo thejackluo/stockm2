@@ -30,13 +30,13 @@ print("INPUT TEST REPORT") # print the first 3 stock in the all stock list as te
 # test_stocks = [all_stocks[1], all_stocks[5], all_stocks[12]]
 
 # please list out the first 300 stocks for testing purposes
-test_stocks = all_stocks[:10]
+test_stocks = all_stocks[:]
 print("S0:", test_stocks) # AAPL, GOOGL, TSLA 
 
 # TODO: write a check for stocks whether they are in the US avaialble stocks (for backtesting purposes)
 
 # S1: API Key and set up
-load_dotenv(override=True)  # take environment variables from .env.
+# load_dotenv(override=True)  # take environment variables from .env.
 
 api_key = os.getenv('QUICKFS_API_KEY')
 

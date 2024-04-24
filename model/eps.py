@@ -36,8 +36,8 @@ def filter_by_positive_growth(stocks):
     good_stocks = []
     rejected_stocks = []
     for stock in stocks:
-        print(stock.determine_num_of_negative_growths())
-        if stock.determine_num_of_negative_growths() <= 2:
+        #print(stock.determine_num_of_negative_growths())
+        if stock.determine_num_of_negative_growths() <= 1:
             good_stocks.append(stock)
         else:
             rejected_stocks.append(stock)
@@ -55,12 +55,14 @@ ranked_stocks = rank_by_EPS_growth(good_stocks)
 print("GOOD STOCKS")
 print("=========================")
 for stock in good_stocks:
-    print(stock)
+    #print(stock)
+    1+1
 
 print("REJECTED STOCKS")
 print("=========================")
 for stock in rejected_stocks:
-    print(stock)
+    #print(stock)
+    1+1
 
 print("RANKED STOCKS")
 print("=========================")

@@ -49,7 +49,7 @@ class Stock:
 
 # from the eps_growth array, sum up all the negative eps growth (below zero)
     def determine_num_of_negative_growths(self):
-        return len([growth for growth in self.EPS_growth if growth < 0])
+        return len([growth for growth in self.EPS_growth if growth <= 0]) #Edited - stocks without 10 yrs data are showing up because they have 0s for years they did not exist.
         # return sum(1 for growth in self.EPS_growth if growth < 0)
     
     # Buy Sell Module
