@@ -99,7 +99,7 @@ class Stock:
         return target_price
    
     # TESTING MODULE
-    def evaluate(self):
+    def evaluate_old(self):
         print(self)
         s = f"\nAt the current price of {self.current_price}, the model's projected interest rate is "
         s += str(self.predict_interest_rate())
@@ -125,15 +125,12 @@ class Stock:
 
     def evaluate(self):
         print(self)
-        s = f"\nAt the current price of {self.current_price}, the model's projected interest rate is "
+        s = f"\nAt the current price of {self.current_price}, the model's projected interest rate is (using average PE) "
         s += str(self.predict_interest_rate())
         s += f"\nUsing the newest PE, {self.PE[-1]}, the model's predicted interest rate is "
         s += str(self.predict_interest_rate(self.PE[-1])) + f"\nDampener: {self.dampener}\n"
         s += f"Years of negative EPS Growth: {self.determine_num_of_negative_growths()}\n"
         print(s)
 
-        print(f"Using Average PE of {self.get_average_PE()} and most recent EPS of {self.EPS_2023}, the model's predicted interest rate is ")
-        print(self.predict_interest_rate(self.get_average_PE()))
-        print(f"Using the most recent PE of {self.PE[-1]} and most recent EPS of {self.EPS_2023}, the model's predicted interest rate is ")
-        print(self.predict_interest_rate(self.PE[-1]))
+
 

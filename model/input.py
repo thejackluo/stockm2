@@ -30,7 +30,7 @@ print("INPUT TEST REPORT") # print the first 3 stock in the all stock list as te
 # test_stocks = [all_stocks[1], all_stocks[5], all_stocks[12]]
 
 # please list out the first 300 stocks for testing purposes
-test_stocks = all_stocks[:10]
+test_stocks = all_stocks[:300]
 print("S0:", test_stocks) # AAPL, GOOGL, TSLA 
 
 # TODO: write a check for stocks whether they are in the US avaialble stocks (for backtesting purposes)
@@ -54,7 +54,7 @@ print("S1: Client Success, current usage:", client.get_usage())
 # EPS Module
 
 # get 10 years eps growth, eps, pe ratio, and price for the test stocks
-resp = client.get_data_batch(companies=test_stocks, metrics=['eps_diluted_growth', 'price_to_earnings'], period="FY-9:FY") # Example Function
+resp = client.get_data_batch(companies=test_stocks, metrics=['eps_diluted_growth', 'price_to_earnings','eps_diluted','period_end_price'], period="FY-9:FY") # Example Function
 
 # Check the status of the call
 print("S2: client resp:", client.resp) # If it says 207, you have content to use.
@@ -77,10 +77,10 @@ all_stocks = []
 for i in range(len(test_stocks)):
     stock_name = "TEST" #TODO
     ticker = test_stocks[i]
-    EPS_2023 = 0 #TODO
+    EPS_2023 = pd_stocks.loc[ticker, 'eps_diluted'][-1]
     EPS_growth = pd_stocks.loc[ticker, 'eps_diluted_growth']
     PE = pd_stocks.loc[ticker, 'price_to_earnings']
-    current_price = -1 #TODO
+    current_price = pd_stocks.loc[ticker, 'period_end_price'][-1] #TODO - uses period end prices (believe it is year end), not the current price
 
     stock = Stock(stock_name, ticker, EPS_2023, EPS_growth, PE, current_price)
     all_stocks.append(stock)

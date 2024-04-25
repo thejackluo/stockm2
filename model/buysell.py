@@ -38,19 +38,19 @@ Our goal is to go through an API and get all the data and produce
 
 """
 
-# Original small model
 
 import numpy as np
 from eps import good_stocks
 
 
-
+# A very basic module for evaluate stock, using the old evaluate functions on all good stocks
 print("BUY SELL MODULE START")
 def evaluate_all_stock():
     for stock in good_stocks:
         stock.evaluate()
 evaluate_all_stock()
 
+# Original small model
 
 #if __name__ == "__main__":
     # Input is a list of Earnings per Share (EPS) and Price to Earnings (PE) ratios (test stocks)
