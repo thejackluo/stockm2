@@ -50,6 +50,11 @@ def evaluate_all_stock():
         stock.evaluate()
 evaluate_all_stock()
 
+#def rank_by_percent_above_below(stocks):
+#    return sorted(stocks, key=lambda x: x.get_average_EPS_growth(x.EPS_growth), reverse=True)
+
+
+
 # Original small model
 
 #if __name__ == "__main__":

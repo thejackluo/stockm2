@@ -24,18 +24,21 @@ class Stock:
         self.avg_PE = self.get_average_PE() # internal method
         self.current_price = current_price
         self.dampener = self.determine_dampener() # internal method
-        #self.current_price_above_below_buy_price_percent = 
+        self.buy_price = self.target_prices(self.avg_PE) #internal method
+        self.current_price_above_below_buy_price_percent = (self.current_price-self.buy_price)/self.buy_price
 
     # General Util
     def __str__(self):
         # please print the entire stock object
         return f"Stock: {self.stock_name} ({self.ticker})\n" + \
-            f"Average EPS: {self.avg_EPS}\n"
+            f"Average EPS: {self.avg_EPS}\n" + \
+            f"Current Price: {self.current_price}\n" + \
+            f"Buy Price: {self.buy_price}\n" + \
+            f"Above below: {self.current_price_above_below_buy_price_percent}\n"
 
             #f"EPS 2023: {self.EPS_2023}\n" + \
             #f"EPS Growth: {self.EPS_growth}\n" + \
             #f"PE: {self.PE}\n" + \
-            #f"Current Price: {self.current_price}\n" + \
             #f"Average PE: {self.avg_PE}\n" + \
             #f"Dampener: {self.dampener}\n" + \
 
@@ -92,12 +95,13 @@ class Stock:
         EPS_2033 = self.exponential_growth(self.EPS_2023, 1 + adjusted_EPS, 10)
         price_2033 = target_PE * EPS_2033
         target_price = price_2033 / (self.target_rate + 1) ** 10
+        buy_price = target_price * (1 - self.margin_of_safety)
         sell_price = price_2033 / (self.sell_rate + 1) ** 10
 
         print(f"Using PE of {target_PE}, the original buy (target rate: {self.target_rate}) is {target_price}.")
-        print(f"After margin of safety of {self.margin_of_safety}, the predicted buy is {target_price * (1 - self.margin_of_safety)}.")
+        print(f"After margin of safety of {self.margin_of_safety}, the predicted buy is {buy_price}.")
         print(f"The predicted sell (sell rate: {self.sell_rate}) is {sell_price}.")
-        return target_price
+        return buy_price #TODO this only returns the buy price, it should return the sell price and ideally the target price too - or can be made different functions
    
     # TESTING MODULE
     def evaluate_old(self):

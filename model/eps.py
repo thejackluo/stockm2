@@ -38,7 +38,7 @@ def filter_by_positive_growth(stocks):
     rejected_stocks = []
     for stock in stocks:
         #print(stock.determine_num_of_negative_growths())
-        if stock.determine_num_of_negative_growths() <= 1:
+        if stock.determine_num_of_negative_growths() <= 2:
             good_stocks.append(stock)
         else:
             rejected_stocks.append(stock)
