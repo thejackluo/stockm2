@@ -10,7 +10,7 @@ class Stock:
     margin_of_safety = 0.25  # this should be experimented with
     max_dampener = 0.8  # this should be experimented with
     sell_rate = 0.15
-    max_EPS_growth = 0.60  # this should be experimented with, but less priority
+    max_EPS_growth = 0.50  # this should be experimented with, but less priority
     target_rate = 0.18  # Define target_rate as a class attribute
 
     # Attributes
@@ -29,14 +29,14 @@ class Stock:
     def __str__(self):
         # please print the entire stock object
         return f"Stock: {self.stock_name} ({self.ticker})\n" + \
-            f"EPS 2023: {self.EPS_2023}\n" + \
-            f"EPS Growth: {self.EPS_growth}\n" + \
-            f"PE: {self.PE}\n" + \
-            f"Current Price: {self.current_price}\n" + \
-            f"Average PE: {self.avg_PE}\n" + \
-            f"Dampener: {self.dampener}\n" + \
             f"Average EPS: {self.avg_EPS}\n"
 
+            #f"EPS 2023: {self.EPS_2023}\n" + \
+            #f"EPS Growth: {self.EPS_growth}\n" + \
+            #f"PE: {self.PE}\n" + \
+            #f"Current Price: {self.current_price}\n" + \
+            #f"Average PE: {self.avg_PE}\n" + \
+            #f"Dampener: {self.dampener}\n" + \
 
         # return f"{self.stock_name} ({self.ticker}) - Current Price: {self.current_price}"
 
@@ -47,7 +47,7 @@ class Stock:
         EPS_growth = np.clip(EPS_growth, -Stock.max_EPS_growth, Stock.max_EPS_growth)
         return np.mean(EPS_growth)
 
-# from the eps_growth array, sum up all the negative eps growth (below zero)
+    # from the eps_growth array, sum up all the negative eps growth (below zero)
     def determine_num_of_negative_growths(self):
         return len([growth for growth in self.EPS_growth if growth <= 0]) #Edited - stocks without 10 yrs data are showing up because they have 0s for years they did not exist.
         # return sum(1 for growth in self.EPS_growth if growth < 0)
@@ -122,3 +122,18 @@ class Stock:
                 print(f"Using PE of {PE} and most recent EPS of {self.EPS_2023}, the model's predicted interest rate is ")
                 print(self.predict_interest_rate(PE))
                 self.target_prices(PE)
+
+    def evaluate(self):
+        print(self)
+        s = f"\nAt the current price of {self.current_price}, the model's projected interest rate is "
+        s += str(self.predict_interest_rate())
+        s += f"\nUsing the newest PE, {self.PE[-1]}, the model's predicted interest rate is "
+        s += str(self.predict_interest_rate(self.PE[-1])) + f"\nDampener: {self.dampener}\n"
+        s += f"Years of negative EPS Growth: {self.determine_num_of_negative_growths()}\n"
+        print(s)
+
+        print(f"Using Average PE of {self.get_average_PE()} and most recent EPS of {self.EPS_2023}, the model's predicted interest rate is ")
+        print(self.predict_interest_rate(self.get_average_PE()))
+        print(f"Using the most recent PE of {self.PE[-1]} and most recent EPS of {self.EPS_2023}, the model's predicted interest rate is ")
+        print(self.predict_interest_rate(self.PE[-1]))
+

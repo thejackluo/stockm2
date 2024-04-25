@@ -41,12 +41,22 @@ Our goal is to go through an API and get all the data and produce
 # Original small model
 
 import numpy as np
+from eps import good_stocks
 
-if __name__ == "__main__":
+
+
+print("BUY SELL MODULE START")
+def evaluate_all_stock():
+    for stock in good_stocks:
+        stock.evaluate()
+evaluate_all_stock()
+
+
+#if __name__ == "__main__":
     # Input is a list of Earnings per Share (EPS) and Price to Earnings (PE) ratios (test stocks)
-    TPLEPS = [0.31, 0.4730, -0.1330, 1.3400, 1.1750, 0.5260, -0.4480, 0.5340, 0.6590, -0.0870]
-    TPLPE = [28.25, 21.24, 55.65, 35.93, 20.04, 19.01, 32.03, 35.88, 40.42, 29.73]
+    #TPLEPS = [0.31, 0.4730, -0.1330, 1.3400, 1.1750, 0.5260, -0.4480, 0.5340, 0.6590, -0.0870]
+    #TPLPE = [28.25, 21.24, 55.65, 35.93, 20.04, 19.01, 32.03, 35.88, 40.42, 29.73]
 
     # Input the stock's name, ticker, EPS for 2023, EPS growth, PE, and current price
-    tpl = Stock("Texas Pacific Land", "TPL", 52.77, TPLEPS, TPLPE, 1650)
-    tpl.evaluate()
+    #tpl = Stock("Texas Pacific Land", "TPL", 52.77, TPLEPS, TPLPE, 1650)
+    #tpl.evaluate()

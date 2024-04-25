@@ -29,6 +29,7 @@ Our goal is to go through the EPS data and filter out the stocks that have below
 
 from input import all_stocks
 
+
 print("EPS MODULE START")
 
 # filter by years of positive growth
@@ -55,14 +56,12 @@ ranked_stocks = rank_by_EPS_growth(good_stocks)
 print("GOOD STOCKS")
 print("=========================")
 for stock in good_stocks:
-    #print(stock)
-    1+1
+    print(stock)
 
 print("REJECTED STOCKS")
 print("=========================")
 for stock in rejected_stocks:
-    #print(stock)
-    1+1
+    print(stock)
 
 print("RANKED STOCKS")
 print("=========================")
