@@ -30,7 +30,7 @@ print("INPUT TEST REPORT") # print the first 3 stock in the all stock list as te
 # test_stocks = [all_stocks[1], all_stocks[5], all_stocks[12]]
 
 # please list out the first 300 stocks for testing purposes
-test_stocks = all_stocks[:300]
+test_stocks = all_stocks[:20]
 print("S0:", test_stocks) # AAPL, GOOGL, TSLA 
 
 # TODO: write a check for stocks whether they are in the US avaialble stocks (for backtesting purposes)

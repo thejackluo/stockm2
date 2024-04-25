@@ -45,13 +45,21 @@ from eps import good_stocks
 
 # A very basic module for evaluate stock, using the old evaluate functions on all good stocks
 print("BUY SELL MODULE START")
+print("=========================")
+print("STOCKS RANKED BY PERCENT ABOVE/BELOW TARGET PRICE")
+print("=========================")
+
+
 def evaluate_all_stock():
     for stock in good_stocks:
         stock.evaluate()
-evaluate_all_stock()
+        print("\n=========================")
 
-#def rank_by_percent_above_below(stocks):
-#    return sorted(stocks, key=lambda x: x.get_average_EPS_growth(x.EPS_growth), reverse=True)
+
+def rank_by_percent_above_below(stocks): # Returns a list of stocks object sorted by percent above or below the buy price
+    return sorted(stocks, key=lambda x: x.get_current_price_above_below_buy_price_percent(), reverse=False)
+good_stocks = rank_by_percent_above_below(good_stocks)
+evaluate_all_stock()
 
 
 

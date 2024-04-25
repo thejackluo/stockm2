@@ -25,7 +25,7 @@ class Stock:
         self.current_price = current_price
         self.dampener = self.determine_dampener() # internal method
         self.buy_price = self.target_prices(self.avg_PE) #internal method
-        self.current_price_above_below_buy_price_percent = (self.current_price-self.buy_price)/self.buy_price
+        self.current_price_above_below_buy_price_percent = self.get_current_price_above_below_buy_price_percent()
 
     # General Util
     def __str__(self):
@@ -50,6 +50,10 @@ class Stock:
     def get_average_EPS_growth(EPS_growth):
         EPS_growth = np.clip(EPS_growth, -Stock.max_EPS_growth, Stock.max_EPS_growth)
         return np.mean(EPS_growth)
+    
+    # take the percent above or below the buy price that the current price is at
+    def get_current_price_above_below_buy_price_percent(self):
+        return (self.current_price-self.buy_price)/self.buy_price
 
     # from the eps_growth array, sum up all the negative eps growth (below zero)
     def determine_num_of_negative_growths(self):
@@ -133,8 +137,8 @@ class Stock:
         s = f"\nAt the current price of {self.current_price}, the model's projected interest rate is (using average PE) "
         s += str(self.predict_interest_rate())
         s += f"\nUsing the newest PE, {self.PE[-1]}, the model's predicted interest rate is "
-        s += str(self.predict_interest_rate(self.PE[-1])) + f"\nDampener: {self.dampener}\n"
-        s += f"Years of negative EPS Growth: {self.determine_num_of_negative_growths()}\n"
+        s += str(self.predict_interest_rate(self.PE[-1]))# + f"\nDampener: {self.dampener}\n"
+        #s += f"Years of negative EPS Growth: {self.determine_num_of_negative_growths()}\n"
         print(s)
 
 
