@@ -25,7 +25,7 @@ class Stock:
         self.current_price = current_price
         self.dampener = self.determine_dampener() # internal method
         self.buy_price = self.target_prices(self.avg_PE) #internal method
-        self.current_price_above_below_buy_price_percent = self.get_current_price_above_below_buy_price_percent()
+        self.current_price_above_below_buy_price_percent = self.get_current_price_above_below_buy_price_percent() #internal method
 
     # General Util
     def __str__(self):
