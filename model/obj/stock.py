@@ -10,7 +10,7 @@ class Stock:
     margin_of_safety = 0.25  # this should be experimented with
     max_dampener = 0.8  # this should be experimented with
     sell_rate = 0.15
-    max_EPS_growth = 0.60  # this should be experimented with, but less priority
+    max_EPS_growth = 0.50  # this should be experimented with, but less priority
     target_rate = 0.18  # Define target_rate as a class attribute
 
     # Attributes
@@ -24,19 +24,23 @@ class Stock:
         self.avg_PE = self.get_average_PE() # internal method
         self.current_price = current_price
         self.dampener = self.determine_dampener() # internal method
+        self.buy_price = self.target_prices(self.avg_PE) #internal method
+        self.current_price_above_below_buy_price_percent = self.get_current_price_above_below_buy_price_percent() #internal method
 
     # General Util
     def __str__(self):
         # please print the entire stock object
         return f"Stock: {self.stock_name} ({self.ticker})\n" + \
-            f"EPS 2023: {self.EPS_2023}\n" + \
-            f"EPS Growth: {self.EPS_growth}\n" + \
-            f"PE: {self.PE}\n" + \
+            f"Average EPS: {self.avg_EPS}\n" + \
             f"Current Price: {self.current_price}\n" + \
-            f"Average PE: {self.avg_PE}\n" + \
-            f"Dampener: {self.dampener}\n" + \
-            f"Average EPS: {self.avg_EPS}\n"
+            f"Buy Price: {self.buy_price}\n" + \
+            f"Above below: {self.current_price_above_below_buy_price_percent}\n"
 
+            #f"EPS 2023: {self.EPS_2023}\n" + \
+            #f"EPS Growth: {self.EPS_growth}\n" + \
+            #f"PE: {self.PE}\n" + \
+            #f"Average PE: {self.avg_PE}\n" + \
+            #f"Dampener: {self.dampener}\n" + \
 
         # return f"{self.stock_name} ({self.ticker}) - Current Price: {self.current_price}"
 
@@ -46,8 +50,12 @@ class Stock:
     def get_average_EPS_growth(EPS_growth):
         EPS_growth = np.clip(EPS_growth, -Stock.max_EPS_growth, Stock.max_EPS_growth)
         return np.mean(EPS_growth)
+    
+    # take the percent above or below the buy price that the current price is at
+    def get_current_price_above_below_buy_price_percent(self):
+        return (self.current_price-self.buy_price)/self.buy_price
 
-# from the eps_growth array, sum up all the negative eps growth (below zero)
+    # from the eps_growth array, sum up all the negative eps growth (below zero)
     def determine_num_of_negative_growths(self):
         return len([growth for growth in self.EPS_growth if growth <= 0]) #Edited - stocks without 10 yrs data are showing up because they have 0s for years they did not exist.
         # return sum(1 for growth in self.EPS_growth if growth < 0)
@@ -91,15 +99,16 @@ class Stock:
         EPS_2033 = self.exponential_growth(self.EPS_2023, 1 + adjusted_EPS, 10)
         price_2033 = target_PE * EPS_2033
         target_price = price_2033 / (self.target_rate + 1) ** 10
+        buy_price = target_price * (1 - self.margin_of_safety)
         sell_price = price_2033 / (self.sell_rate + 1) ** 10
 
         print(f"Using PE of {target_PE}, the original buy (target rate: {self.target_rate}) is {target_price}.")
-        print(f"After margin of safety of {self.margin_of_safety}, the predicted buy is {target_price * (1 - self.margin_of_safety)}.")
+        print(f"After margin of safety of {self.margin_of_safety}, the predicted buy is {buy_price}.")
         print(f"The predicted sell (sell rate: {self.sell_rate}) is {sell_price}.")
-        return target_price
+        return buy_price #TODO this only returns the buy price, it should return the sell price and ideally the target price too - or can be made different functions
    
     # TESTING MODULE
-    def evaluate(self):
+    def evaluate_old(self):
         print(self)
         s = f"\nAt the current price of {self.current_price}, the model's projected interest rate is "
         s += str(self.predict_interest_rate())
@@ -122,3 +131,15 @@ class Stock:
                 print(f"Using PE of {PE} and most recent EPS of {self.EPS_2023}, the model's predicted interest rate is ")
                 print(self.predict_interest_rate(PE))
                 self.target_prices(PE)
+
+    def evaluate(self):
+        print(self)
+        s = f"\nAt the current price of {self.current_price}, the model's projected interest rate is (using average PE) "
+        s += str(self.predict_interest_rate())
+        s += f"\nUsing the newest PE, {self.PE[-1]}, the model's predicted interest rate is "
+        s += str(self.predict_interest_rate(self.PE[-1]))# + f"\nDampener: {self.dampener}\n"
+        #s += f"Years of negative EPS Growth: {self.determine_num_of_negative_growths()}\n"
+        print(s)
+
+
+
