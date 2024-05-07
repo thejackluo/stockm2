@@ -38,7 +38,6 @@ Our goal is to go through an API and get all the data and produce
 
 """
 
-
 import numpy as np
 from eps import good_stocks
 

@@ -58,7 +58,7 @@ print("S2: client resp number:", client.resp) # Outputs response number. If it s
 print("S2: client content:", client.resp._content) # Outputs the content of the response, if there is an error, check the error
 
 
-# EPS Module Data V2: use the client.get_data_full to get metadata for stock and use a for loop to run through all_stocks ticker, then in each iteration, print out the data
+# # # EPS Module Data V2: use the client.get_data_full to get metadata for stock and use a for loop to run through all_stocks ticker, then in each iteration, print out the data
 # for ticker in test_stocks:
 #     print("S2: ticker: ===================================", ticker)
 #     print(client.get_data_full(symbol=ticker))
@@ -81,9 +81,10 @@ print("S3: test_stocks Pandas DataFrame", pd_stocks) # Output the dataframe to V
 all_stocks = [] # initalize a list of stock objects
 
 for i in range(len(test_stocks)):
-    stock_name = "TEST" #TODO
-    current_price = pd_stocks.loc[ticker, 'period_end_price'][-1] #TODO - uses period end prices (believe it is year end), not the current price
+    resp2 = client.get_data_full(symbol=test_stocks[i])
 
+    stock_name = resp2.get('metadata', {}).get('name', "Unknown")
+    current_price = resp2.get('financials', {}).get('ttm', {}).get('period_end_price') # TODO: price is not accurate to the day, only to the month
     ticker = test_stocks[i]
     EPS_2023 = pd_stocks.loc[ticker, 'eps_diluted'][-1]
     EPS_growth = pd_stocks.loc[ticker, 'eps_diluted_growth']
@@ -108,6 +109,10 @@ for stock in all_stocks:
 # print(AAPL)
 
 # client.get_data_batch(companies=test_stocks, metrics=['eps', 'roic'], period="FY-2:FY") # Example Function
+
+# Old Current Price Retrieval
+# current_price = pd_stocks.loc[ticker, 'period_end_price'][-1] #TODO - uses period end prices (believe it is year end), not the current price
+
 """
 
 
