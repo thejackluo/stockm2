@@ -1,10 +1,10 @@
 """
 DOCUMENTATION: input.py
 
-Input: An array of ALL tickers we want to test
-Output: An array of stock objects 
+INPUT: An array of ALL tickers we want to test
+OUTPUT: An array of stock objects 
 
-STOCK Object:
+STOCK OBJ:
     - ticker
     - stock_name
     - EPS_2023
@@ -12,26 +12,29 @@ STOCK Object:
     (other data for the future)
 
 FUNCTION
-Our goal is to go through an API and get all the data and produce
+Our goal is to go through an API and get all the data and produce ______________
 """
 
 from dotenv import load_dotenv
 from quickfs import QuickFS
 from all_stocks import all_stocks
-from obj.stock import Stock
+from obj.Stock import Stock
 import os
 import json
 import pandas as pd
 
-# S0: Input (US indexes Russel 1000 + 2000 V2) (S&P 500 V1)
-
+# S0: Get input (US indexes Russel 1000 + 2000 V2) (S&P 500 V1)
+"""
 # create a list of the three test stocks (1, 5, 12) ticker only no object
-print("INPUT TEST REPORT") # print the first 3 stock in the all stock list as testing purposes
-# test_stocks = [all_stocks[1], all_stocks[5], all_stocks[12]]
+# test_stocks = [all_stocks[1], all_stocks[5], all_stocks[12]] # print the first 3 stock in the all stock list as testing purposes # AAPL, GOOGL, TSLA????
+"""
 
-# please list out the first 300 stocks for testing purposes
-test_stocks = all_stocks[:]
-print("S0:", test_stocks) # AAPL, GOOGL, TSLA 
+print("=====================================")
+print("P0: Input Module")
+print("=====================================") 
+
+test_stocks = all_stocks[:] # test stock list based on all_stocks.py
+print("S0: Stock List:", test_stocks) 
 
 # TODO: write a check for stocks whether they are in the US avaialble stocks (for backtesting purposes)
 
@@ -55,6 +58,11 @@ print("S1: Client Success, current usage:", client.get_usage())
 
 # get 10 years eps growth, eps, pe ratio, and price for the test stocks
 resp = client.get_data_batch(companies=test_stocks, metrics=['eps_diluted_growth', 'price_to_earnings','eps_diluted','period_end_price'], period="FY-9:FY") # Example Function
+
+# use the client.get_data_full to get metadata for stock and use a for loop to runthrought eh all_stocks ticker, then in each iteration, print out the data
+for ticker in test_stocks:
+    print("S2: ticker: ===================================", ticker)
+    print(client.get_data_full(symbol=ticker))
 
 # Check the status of the call
 print("S2: client resp:", client.resp) # If it says 207, you have content to use.
