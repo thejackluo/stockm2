@@ -50,50 +50,50 @@ else:
 
 
 
-# S2: For stock 1, 5, and 12 based on indice, import the stock object (attributes above) and initialize some data points based on the output using API calls, then print out the stock object for testing (all 3)
-
-# EPS Module
-
-# get 10 years eps growth, eps, pe ratio, and price for the test stocks
-resp = client.get_data_batch(companies=test_stocks, metrics=['eps_diluted_growth', 'price_to_earnings','eps_diluted','period_end_price'], period="FY-9:FY") # Example Function
-
-# use the client.get_data_full to get metadata for stock and use a for loop to runthrought eh all_stocks ticker, then in each iteration, print out the data
-for ticker in test_stocks:
-    print("S2: ticker: ===================================", ticker)
-    print(client.get_data_full(symbol=ticker))
-
+# S2: For test_stocks list, RETRIEVE different attributes of the stock based on the API and initialize new stock object
+# EPS Module Data V1
+resp = client.get_data_batch(companies=test_stocks, metrics=['eps_diluted_growth', 'price_to_earnings','eps_diluted','period_end_price'], period="FY-9:FY") # get 10 years eps growth, eps, pe ratio, and price for the test stocks
 # Check the status of the call
 print("S2: client resp:", client.resp) # If it says 207, you have content to use.
 print("S2: client content:", client.resp._content) # check the error
 
-# S3: convert into PANDAS dataframe for easier manipulation
+
+# EPS Module Data V2: use the client.get_data_full to get metadata for stock and use a for loop to run through all_stocks ticker, then in each iteration, print out the data
+# for ticker in test_stocks:
+#     print("S2: ticker: ===================================", ticker)
+#     print(client.get_data_full(symbol=ticker))
+
+
+
+# S3: Convert json data into into PANDAS dataframe for easier manipulation
 pd_stocks = json.loads(client.resp._content.decode('utf-8'))['data'] # filter and extract for the companies that you have data
 pd_stocks = pd.DataFrame(pd_stocks) # transform it to a pandas dataframe (if you want it)
-print("S3: organized stocks", pd_stocks)
+print("S3: test_stocks Pandas DataFrame", pd_stocks)
 
 # S4: create stock objects for the test stocks
+"""
 # using numpy, get the average EPS growth for each stock, and create the stock object for each stock
 # get the most recent eps growth based on teh last eps diluted growth for each stock for inputting into the stock object later\
+# TODO: (update stock name and current price) (currently set name to TEST, and set current price to -1)
+"""
 
-# please ignore stock name, and also current prices for now (set name to TEST, and set current price to -1)
 
-# create a list of stock objects
-all_stocks = []
+all_stocks = [] # initalize a list of stock objects
 
 for i in range(len(test_stocks)):
     stock_name = "TEST" #TODO
+    current_price = pd_stocks.loc[ticker, 'period_end_price'][-1] #TODO - uses period end prices (believe it is year end), not the current price
+
     ticker = test_stocks[i]
     EPS_2023 = pd_stocks.loc[ticker, 'eps_diluted'][-1]
     EPS_growth = pd_stocks.loc[ticker, 'eps_diluted_growth']
     PE = pd_stocks.loc[ticker, 'price_to_earnings']
-    current_price = pd_stocks.loc[ticker, 'period_end_price'][-1] #TODO - uses period end prices (believe it is year end), not the current price
 
     stock = Stock(stock_name, ticker, EPS_2023, EPS_growth, PE, current_price)
     all_stocks.append(stock)
 
 
-# print the stock objects
-print("S4: Stock Objects")
+print("S4: Stock Objects:") # Print the final stock objects based on the stringto method from all stocks
 for stock in all_stocks:
     print(stock)
 
@@ -102,12 +102,13 @@ for stock in all_stocks:
 
 
 # ARCHIVES
+"""
 # Stock 1: AAPL
 # AAPL = client.get_data_full(symbol='AAPL:US') 
 # print(AAPL)
 
 # client.get_data_batch(companies=test_stocks, metrics=['eps', 'roic'], period="FY-2:FY") # Example Function
-
+"""
 
 
 
