@@ -24,13 +24,15 @@ STOCK Object (Output):
     - dampener
 
 FUNCTION
-Our goal is to go through the EPS data and filter out the stocks that have below 8 years of positive EPS growth (simple function)
+Our goal is to go through the EPS data and filter out the stocks that have below 8 years of positive EPS growth (simple function), then rank the stocks based on the highest average EPS growth over the 10 years from the good stocks. 
+EPS growth for a year cannot exceed max_EPS_growth (metric)
 """
 
 from input import all_stocks
 
-
-print("EPS MODULE START")
+print("=====================================")
+print("P2: EPS MODULE")
+print("=====================================")
 
 # filter by years of positive growth
 def filter_by_positive_growth(stocks):
