@@ -54,8 +54,8 @@ else:
 # EPS Module Data V1
 resp = client.get_data_batch(companies=test_stocks, metrics=['eps_diluted_growth', 'price_to_earnings','eps_diluted','period_end_price'], period="FY-9:FY") # get 10 years eps growth, eps, pe ratio, and price for the test stocks
 # Check the status of the call
-print("S2: client resp:", client.resp) # If it says 207, you have content to use.
-print("S2: client content:", client.resp._content) # check the error
+print("S2: client resp number:", client.resp) # Outputs response number. If it says 207, you have content to use.
+print("S2: client content:", client.resp._content) # Outputs the content of the response, if there is an error, check the error
 
 
 # EPS Module Data V2: use the client.get_data_full to get metadata for stock and use a for loop to run through all_stocks ticker, then in each iteration, print out the data
@@ -67,8 +67,8 @@ print("S2: client content:", client.resp._content) # check the error
 
 # S3: Convert json data into into PANDAS dataframe for easier manipulation
 pd_stocks = json.loads(client.resp._content.decode('utf-8'))['data'] # filter and extract for the companies that you have data
-pd_stocks = pd.DataFrame(pd_stocks) # transform it to a pandas dataframe (if you want it)
-print("S3: test_stocks Pandas DataFrame", pd_stocks)
+pd_stocks = pd.DataFrame(pd_stocks) # transform it to a pandas dataframe
+print("S3: test_stocks Pandas DataFrame", pd_stocks) # Output the dataframe to VISUALIZE the data
 
 # S4: create stock objects for the test stocks
 """
