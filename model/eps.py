@@ -55,17 +55,17 @@ def rank_by_EPS_growth(stocks):
 good_stocks, rejected_stocks = filter_by_positive_growth(all_stocks)
 ranked_stocks = rank_by_EPS_growth(good_stocks)
 
-print("GOOD STOCKS")
+print("S0: GOOD STOCKS")
 print("=========================")
 for stock in good_stocks:
     print(stock)
 
-print("REJECTED STOCKS")
+print("S1: REJECTED STOCKS")
 print("=========================")
 for stock in rejected_stocks:
     print(stock)
 
-print("RANKED STOCKS")
+print("S2: RANKED STOCKS")
 print("=========================")
 for stock in ranked_stocks:
     print(stock)

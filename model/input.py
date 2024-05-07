@@ -74,7 +74,7 @@ print("S3: test_stocks Pandas DataFrame", pd_stocks) # Output the dataframe to V
 """
 # using numpy, get the average EPS growth for each stock, and create the stock object for each stock
 # get the most recent eps growth based on teh last eps diluted growth for each stock for inputting into the stock object later\
-# TODO: (update stock name and current price) (currently set name to TEST, and set current price to -1)
+# TODO DONE: (update stock name and current price) (currently set name to TEST, and set current price to -1)
 """
 
 
