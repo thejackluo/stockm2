@@ -36,21 +36,19 @@ print("=====================================")
 test_stocks = all_stocks[:] # test stock list based on all_stocks.py
 print("S0: Stock List:", test_stocks) 
 
-# TODO: write a check for stocks whether they are in the US avaialble stocks (for backtesting purposes)
 
-# S1: API Key and set up
-# load_dotenv(override=True)  # take environment variables from .env.
-
+# S1: Add API KEY and Set Up QuickFS SDK
+load_dotenv(override=True)  # take environment variables from .env.
 api_key = os.getenv('QUICKFS_API_KEY')
 
 if api_key:
-    print("S1: API Key Success")
-    print(api_key)
+    print("S1: API Key Success:", api_key)
+    client = QuickFS(api_key)
+    print("S1: QuickFS SDK Client Success, current usage:", client.get_usage())
 else:
-    print("ERROR S1: Environment variable not found.")
+    print("ERROR S1: Environment or API_Key variable not found.")
 
-client = QuickFS(api_key)
-print("S1: Client Success, current usage:", client.get_usage())
+
 
 # S2: For stock 1, 5, and 12 based on indice, import the stock object (attributes above) and initialize some data points based on the output using API calls, then print out the stock object for testing (all 3)
 
