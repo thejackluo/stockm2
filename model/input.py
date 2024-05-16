@@ -22,7 +22,7 @@ from obj.Stock import Stock
 import os
 import json
 import pandas as pd
-from seekinginput import alpha_vantage_current_price_obtainer
+from avinput import alpha_vantage_current_price_obtainer
 
 # S0: Get input (US indexes Russel 1000 + 2000 V2) (S&P 500 V1)
 """

@@ -65,6 +65,7 @@ class Stock:
     def get_average_PE(self):
         return np.mean(self.PE)
 
+
     # Buy Sell Util
     ###
     def predict_interest_rate(self, PE=None):
