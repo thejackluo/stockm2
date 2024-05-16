@@ -53,6 +53,7 @@ class Stock:
     
     # take the percent above or below the buy price that the current price is at
     def get_current_price_above_below_buy_price_percent(self):
+        
         return (self.current_price-self.buy_price)/self.buy_price
 
     # from the eps_growth array, sum up all the negative eps growth (below zero)
@@ -101,10 +102,10 @@ class Stock:
         target_price = price_2033 / (self.target_rate + 1) ** 10
         buy_price = target_price * (1 - self.margin_of_safety)
         sell_price = price_2033 / (self.sell_rate + 1) ** 10
-
-        print(f"Using PE of {target_PE}, the original buy (target rate: {self.target_rate}) is {target_price}.")
-        print(f"After margin of safety of {self.margin_of_safety}, the predicted buy is {buy_price}.")
-        print(f"The predicted sell (sell rate: {self.sell_rate}) is {sell_price}.")
+        
+        #print(f"Using PE of {target_PE}, the original buy (target rate: {self.target_rate}) is {target_price}.")
+        #print(f"After margin of safety of {self.margin_of_safety}, the predicted buy is {buy_price}.")
+        #print(f"The predicted sell (sell rate: {self.sell_rate}) is {sell_price}.")
         return buy_price #TODO this only returns the buy price, it should return the sell price and ideally the target price too - or can be made different functions
    
     # TESTING MODULE

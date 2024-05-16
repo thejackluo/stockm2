@@ -22,6 +22,7 @@ from obj.Stock import Stock
 import os
 import json
 import pandas as pd
+from seekinginput import alpha_vantage_current_price_obtainer
 
 # S0: Get input (US indexes Russel 1000 + 2000 V2) (S&P 500 V1)
 """
@@ -77,19 +78,17 @@ print("S3: test_stocks Pandas DataFrame", pd_stocks) # Output the dataframe to V
 # TODO DONE: (update stock name and current price) (currently set name to TEST, and set current price to -1)
 """
 
-
 all_stocks = [] # initalize a list of stock objects
 
 for i in range(len(test_stocks)):
     resp2 = client.get_data_full(symbol=test_stocks[i])
 
     stock_name = resp2.get('metadata', {}).get('name', "Unknown")
-    current_price = resp2.get('financials', {}).get('ttm', {}).get('period_end_price') # TODO: price is not accurate to the day, only to the month
     ticker = test_stocks[i]
+    current_price = alpha_vantage_current_price_obtainer(ticker)
     EPS_2023 = pd_stocks.loc[ticker, 'eps_diluted'][-1]
     EPS_growth = pd_stocks.loc[ticker, 'eps_diluted_growth']
     PE = pd_stocks.loc[ticker, 'price_to_earnings']
-
     stock = Stock(stock_name, ticker, EPS_2023, EPS_growth, PE, current_price)
     all_stocks.append(stock)
 
