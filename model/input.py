@@ -13,6 +13,12 @@ STOCK OBJ:
 
 FUNCTION
 Our goal is to go through an API and get all the data and produce ______________
+
+This file uses QUICKFS as the API of choice
+
+LIMITATIONS:
+Period end price data is only available to the period end price (end of 2023), can be optimized to end of quarter price, but still not ideal
+
 """
 
 from dotenv import load_dotenv
@@ -22,7 +28,7 @@ from obj.Stock import Stock
 import os
 import json
 import pandas as pd
-from avinput import alpha_vantage_current_price_obtainer
+#from alphavantagemethods import alpha_vantage_current_price_obtainer
 
 # S0: Get input (US indexes Russel 1000 + 2000 V2) (S&P 500 V1)
 """
@@ -81,15 +87,18 @@ print("S3: test_stocks Pandas DataFrame", pd_stocks) # Output the dataframe to V
 all_stocks = [] # initalize a list of stock objects
 
 for i in range(len(test_stocks)):
-    resp2 = client.get_data_full(symbol=test_stocks[i])
-
+    resp2 = client.get_data_full(symbol=test_stocks[i]) #TODO this takes decent amount of time
     stock_name = resp2.get('metadata', {}).get('name', "Unknown")
     ticker = test_stocks[i]
-    current_price = alpha_vantage_current_price_obtainer(ticker)
+    current_price = pd_stocks.loc[ticker, 'period_end_price'][-1]# alpha_vantage_current_price_obtainer(ticker)
+
     EPS_2023 = pd_stocks.loc[ticker, 'eps_diluted'][-1]
     EPS_growth = pd_stocks.loc[ticker, 'eps_diluted_growth']
     PE = pd_stocks.loc[ticker, 'price_to_earnings']
+
     stock = Stock(stock_name, ticker, EPS_2023, EPS_growth, PE, current_price)
+
+    
     all_stocks.append(stock)
 
 

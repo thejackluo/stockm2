@@ -1,6 +1,6 @@
 # Objective: export list of stocks for other python modules to use
 #tester for one stock
-all_stocks = ['SSD']
+all_stocks = ['SSD','MSFT','IIPR','HDB','UAL']
 #seeking alpha's fav stocks (48)
 all_stocks4 = ['VIV', 'DESP', 'SKYW', 'NLCP', 'AY', 'STNE', 'UAL', 'CLS', 'ANYYY', 'BAP', 'BBDC', 'BLBD', 'BLX', 'CCAP', 'DLNG', 'DNOW', 'EXPE', 'FNMA', 'FRFHF', 'GAU', 'GDDY', 'IQ', 'KOF', 'PAGP', 'PAGS', 'QFIN', 'ROIV', 'SILV', 'SLVM', 'TKC', 'UNM', 'VIPS', 'VYGR', 'DAL', 'ASC', 'HTGC', 'SBLK', 'FITB', 'FRO', 'VTGN', 'AMWD', 'CHRD', 'GSL', 'HST', 'JAMF', 'OBDC', 'SNX', 'TPR']
 # Approximately 300 stocks here

@@ -1,5 +1,5 @@
 """
-DOCUMENTATION: input.py
+DOCUMENTATION: avinput.py
 
 INPUT: An array of ALL tickers we want to test
 OUTPUT: An array of stock objects 
@@ -13,10 +13,14 @@ STOCK OBJ:
 
 FUNCTION
 Our goal is to go through an API and get all the data and produce ______________
+
+This file uses Alpha Vantage API
 """
 
 from dotenv import load_dotenv
 from alpha_vantage.timeseries import TimeSeries
+from alpha_vantage.fundamentaldata import FundamentalData
+import requests
 from all_stocks import all_stocks
 from obj.Stock import Stock
 import os
@@ -38,43 +42,52 @@ print("=====================================")
 # S1: Add API KEY and Set Up AV SDK
 load_dotenv(override=True)  # take environment variables from .env.
 api_key = os.getenv('ALPHAVANTAGE_API_KEY')
-
-
-
 if api_key:
     print("S0: API Key Success:", api_key)
     client = api_key
-    #print("S0: AV SDK Client Success, current usage:", client.queries())
+    #print("S0: AV SDK Client Success, current usage:", client.queries()) #TODO
 else:
     print("ERROR S0: Environment or API_Key variable not found.")
-'''
-sample_stock = 'IIPR'
-print("S1: data for stock:",  sample_stock) # Outputs the data for a sample stock
+test_stocks = all_stocks
 
+print("S1: Print all the data for a Sample Stock (SSD)")
 ts = TimeSeries(key = api_key,output_format = 'pandas')
-data = ts.get_daily(sample_stock)
-print(data)
+fd = FundamentalData(key = api_key,output_format = 'pandas')
 
-my_string = str(data)
-my_string = my_string.split()
-print("#######")
+sample_FD = fd.get_balance_sheet_annual('SSD') # there appears to be functions which grab Balance Sheet, Cashflow statement, and income statement, but earnings cannot find?
+print(sample_FD)
+print('List of Goodwill for stock SSD is', sample_FD[0]['goodwill']) #
+print('sample test: the number 502550000 is SSD goodwill in 2023. It should match the toprightmost number')
 
-#print(my_string) # Output: apple, banana, cherry
-latest_price = my_string[15]
-print("#######")
-# Extracting the top item for "close"
-print('lastest price on', my_string[12], '=', latest_price) # Obtain the last closing price (to the day)
 '''
-#this function solely obtains the current price from alpha vantage. It is really inefficient but works for now.
-def alpha_vantage_current_price_obtainer(ticker):
-    stock_name = ticker
-    ts = TimeSeries(key = api_key,output_format = 'pandas')
-    data = ts.get_daily(stock_name)
-    my_string = str(data)
-    my_string = my_string.split() #TODO this is really slow and not a good way to get the data from the tuple
-    latest_price = my_string[15]
-    float_number = float('175.3700')
+my_string = str(sample_FD)
+my_string = my_string.split()
+print(my_string)
 
-    return float_number
+#ignore below this
+
+#resp = client.get_data_batch(companies=test_stocks, metrics=['eps_diluted_growth', 'price_to_earnings','eps_diluted','period_end_price'], period="FY-9:FY") # get 10 years eps growth, eps, pe ratio, and price for the test stocks
+# Check the status of the call
+
+all_stocks = [] # initalize a list of stock objects
+
+for i in range(len(test_stocks)):
+    resp2 = client.get_data_full(symbol=test_stocks[i]) #TODO this takes decent amount of time
+    stock_name = resp2.get('metadata', {}).get('name', "Unknown")
+    ticker = test_stocks[i]
+    current_price = pd_stocks.loc[ticker, 'period_end_price'][-1]# alpha_vantage_current_price_obtainer(ticker)
+
+    EPS_2023 = pd_stocks.loc[ticker, 'eps_diluted'][-1]
+    EPS_growth = pd_stocks.loc[ticker, 'eps_diluted_growth']
+    PE = pd_stocks.loc[ticker, 'price_to_earnings']
+
+    stock = Stock(stock_name, ticker, EPS_2023, EPS_growth, PE, current_price)
+
+    
+    all_stocks.append(stock)
 
 
+print("S4: Stock Objects:") # Print the final stock objects based on the stringto method from all stocks
+for stock in all_stocks:
+    print(stock)
+'''
