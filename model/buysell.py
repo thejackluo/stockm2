@@ -41,7 +41,6 @@ Our goal is to go through an API and get all the data and produce
 import numpy as np
 from eps import good_stocks
 
-
 # A very basic module for evaluate stock, using the old evaluate functions on all good stocks
 print("BUY SELL MODULE START")
 print("=========================")
