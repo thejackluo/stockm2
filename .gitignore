@@ -1,1 +1,15 @@
+# Ignore environment and build files
 .env
+venv/
+
+# Ignore __pycache__ directories
+__pycache__/
+
+# Ignore other temporary or build-specific files
+*.py[cod]
+*$py.class
+
+# IDE and editor settings
+.vscode/
+.idea/
+*.swp
