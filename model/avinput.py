@@ -21,7 +21,7 @@ from dotenv import load_dotenv
 from alpha_vantage.timeseries import TimeSeries
 from alpha_vantage.fundamentaldata import FundamentalData
 import requests
-from all_stocks import all_stocks
+from util.all_stocks import all_stocks
 from obj.Stock import Stock
 import os
 import json

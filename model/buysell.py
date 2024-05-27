@@ -35,27 +35,29 @@ STOCK Object (output):
     - dampener
 FUNCTION
 Our goal is to go through an API and get all the data and produce
-
+A very basic module for evaluate stock, using the old evaluate functions on all good stocks
 """
 
 import numpy as np
 from eps import good_stocks
 
-# A very basic module for evaluate stock, using the old evaluate functions on all good stocks
-print("BUY SELL MODULE START")
-print("=========================")
-print("STOCKS RANKED BY PERCENT ABOVE/BELOW TARGET PRICE")
-print("=========================")
 
+print("=====================================")
+print("P2: Buy Sell Module")
+print("=====================================") 
 
+# S0: Function definition
 def evaluate_all_stock():
     for stock in good_stocks:
         stock.evaluate()
         print("\n=========================")
 
-
 def rank_by_percent_above_below(stocks): # Returns a list of stocks object sorted by percent above or below the buy price
     return sorted(stocks, key=lambda x: x.get_current_price_above_below_buy_price_percent(), reverse=False)
+
+# S1: Evaulate all the good stocks
+print("STOCKS RANKED BY PERCENT ABOVE/BELOW TARGET PRICE")
+print("=========================")
 good_stocks = rank_by_percent_above_below(good_stocks)
 evaluate_all_stock()
 

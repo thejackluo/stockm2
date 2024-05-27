@@ -31,11 +31,11 @@ EPS growth for a year cannot exceed max_EPS_growth (metric)
 from input import all_stocks
 
 print("=====================================")
-print("P2: EPS MODULE")
+print("P1: EPS MODULE")
 print("=====================================")
 
-# filter by years of positive growth
-def filter_by_positive_growth(stocks):
+# S0: Function definition
+def filter_by_positive_growth(stocks): # filter by years of positive growth
     good_stocks = []
     rejected_stocks = []
     for stock in stocks:
@@ -46,28 +46,31 @@ def filter_by_positive_growth(stocks):
             rejected_stocks.append(stock)
     return good_stocks, rejected_stocks
 
-# rank stock with sufficient positive growth (rank stocks based on the highest average eps growth over the 10 years from the good stocks) -
-# EPS growth for a year cannot exceed max_EPS_growth
+def rank_by_EPS_growth(stocks): # rank stock with sufficient positive growth (rank stocks based on the highest average eps growth 
+# over the 10 years from the good stocks) 
+    return sorted(stocks, key=lambda x: x.get_average_EPS_growth(x.EPS_growth), reverse=True) # - EPS growth for a year cannot exceed max_EPS_growth
 
-def rank_by_EPS_growth(stocks):
-    return sorted(stocks, key=lambda x: x.get_average_EPS_growth(x.EPS_growth), reverse=True)
-
+# S1: Filter the stocks by positive growth and rank the stocks
 good_stocks, rejected_stocks = filter_by_positive_growth(all_stocks)
 ranked_stocks = rank_by_EPS_growth(good_stocks)
 
-print("S0: GOOD STOCKS")
+# S2: Print the results
+
+print("S1: GOOD STOCKS")
 print("=========================")
 for stock in good_stocks:
     print(stock)
 
-print("S1: REJECTED STOCKS")
+print("S2: REJECTED STOCKS")
 print("=========================")
 for stock in rejected_stocks:
     print(stock)
 
-print("S2: RANKED STOCKS")
+print("S3: RANKED STOCKS")
 print("=========================")
 for stock in ranked_stocks:
     print(stock)
+
+# S3: See buysell.py
 
 

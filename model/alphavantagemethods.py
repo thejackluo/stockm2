@@ -6,7 +6,7 @@ This is solely for usage with input.py so we can get more updated prices, despit
 
 from dotenv import load_dotenv
 from alpha_vantage.timeseries import TimeSeries
-from all_stocks import all_stocks
+from util.all_stocks import all_stocks
 from obj.Stock import Stock
 import os
 import json

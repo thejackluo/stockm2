@@ -23,7 +23,7 @@ Period end price data is only available to the period end price (end of 2023), c
 
 from dotenv import load_dotenv
 from quickfs import QuickFS
-from all_stocks import all_stocks
+from util.all_stocks import all_stocks
 from obj.Stock import Stock
 import os
 import json
@@ -107,7 +107,7 @@ for stock in all_stocks:
     print(stock)
 
 
-# S5: Output the stock objects for the next module
+# S5: See eps.py
 
 
 # ARCHIVES
