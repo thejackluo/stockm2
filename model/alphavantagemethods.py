@@ -11,6 +11,7 @@ from obj.Stock import Stock
 import os
 import json
 import pandas as pd
+import requests
 
 
 # S0: Get input (US indexes Russel 1000 + 2000 V2) (S&P 500 V1)
@@ -27,8 +28,6 @@ print("=====================================")
 # S1: Add API KEY and Set Up AV SDK
 load_dotenv(override=True)  # take environment variables from .env.
 api_key = os.getenv('ALPHAVANTAGE_API_KEY')
-
-
 
 if api_key:
     print("S0: API Key Success:", api_key)
@@ -67,4 +66,38 @@ def alpha_vantage_current_price_obtainer(ticker):
     float_number = float(latest_price)
     return float_number
 
+# will add comments later
+def get_stock_info(ticker, EPS_growth):
+    url = "https://www.alphavantage.co/query"
+    params = {
+        "function": "OVERVIEW",
+        "symbol": ticker,
+        "apikey": api_key
+    }
 
+    try:
+        response = requests.get(url, params=params)
+        response.raise_for_status()  
+
+        data = response.json()
+
+        stock_name = data.get("Name")
+        market_cap = int(data.get("MarketCapitalization"))
+        shares_outstanding = int(data.get("SharesOutstanding"))
+        current_price = str(market_cap / shares_outstanding) # effecient way to compute current price 
+        EPS_2023 = data.get("EPS")
+        # EPS_growth = data.get("EPSGrowth") # EPS growth not working
+        PE = data.get("PERatio")
+        
+        print("S1: Stock Info:", stock_name, ticker, EPS_2023, EPS_growth, PE, current_price)
+ 
+        stock = Stock(stock_name, ticker, EPS_2023, EPS_growth, PE, current_price) 
+        return stock
+
+    except requests.exceptions.RequestException as e:
+        print("Error occurred during API request:", e)
+        return None
+
+    except (KeyError, TypeError) as e:
+        print("Error occurred while parsing the response:", e)
+        return None
