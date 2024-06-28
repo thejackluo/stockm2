@@ -60,7 +60,7 @@ else:
 
 # S2: For test_stocks list, RETRIEVE different attributes of the stock based on the API and initialize new stock object
 # EPS Module Data V1
-resp = client.get_data_batch(companies=test_stocks, metrics=['total_current_assets', 'total_current_liabilities','period_end_price','market_cap','shares_diluted'], period="FY-9:FY") # get 10 years eps growth, eps, pe ratio, and price for the test stocks
+resp = client.get_data_batch(companies=test_stocks, metrics=['total_current_assets', 'total_current_liabilities','period_end_price','market_cap','shares_diluted','lt_debt'], period="FY-9:FY") # get 10 years eps growth, eps, pe ratio, and price for the test stocks
 # Check the status of the call
 #print("S2: client resp number:", client.resp) # Outputs response number. If it says 207, you have content to use.
 #print("S2: client content:", client.resp._content) # Outputs the content of the response, if there is an error, check the error
@@ -96,11 +96,12 @@ for i in range(len(test_stocks)):
     liabilities = pd_stocks.loc[ticker, 'total_current_liabilities'][-1]
     market_cap = pd_stocks.loc[ticker, 'market_cap'][-1]
     shares = pd_stocks.loc[ticker, 'shares_diluted'][-1]
+    lt_debt = pd_stocks.loc[ticker, 'lt_debt'][-1]
     
     # Check if total_current_assets is an integer - Certain stocks, most notably banks I think do not
     # work properly for the assets-liabilities method
     if isinstance(total_current_assets, int) and isinstance(liabilities, int):
-        stock = Stock(stock_name, ticker, total_current_assets, liabilities, market_cap, shares, current_price)
+        stock = Stock(stock_name, ticker, total_current_assets, liabilities, market_cap, shares, lt_debt, current_price)
         all_stocks.append(stock)
         print(stock)
 '''

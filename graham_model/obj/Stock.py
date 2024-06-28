@@ -9,7 +9,7 @@ class Stock:
     graham_factor = 0.33  # "Graham liked to buy stocks when net assets are 66% of market cap"
 
     # Attributes
-    def __init__(self, stock_name, ticker, assets, liabilities, market_cap, shares,current_price):
+    def __init__(self, stock_name, ticker, assets, liabilities, market_cap, shares,lt_debt,current_price):
         self.stock_name = stock_name
         self.ticker = ticker
         #self.EPS_2023 = EPS_2023
@@ -20,7 +20,8 @@ class Stock:
         self.current_price = current_price
         self.assets = assets
         self.liabilities = liabilities
-        self.net_assets = self.assets-self.liabilities
+        self.lt_debt = lt_debt
+        self.net_assets = self.assets-self.liabilities-self.lt_debt
         self.market_cap = market_cap
         self.shares = shares
         self.net_asset_value = self.net_assets/self.shares
@@ -35,6 +36,7 @@ class Stock:
         return f"Stock: {self.stock_name} ({self.ticker})\n" + \
             f"Assets: {self.assets}\n" + \
             f"Liabilities: {self.liabilities}\n" + \
+            f"Long-term Debt: {self.lt_debt}\n" + \
             f"Shares Outstanding: {self.shares}\n" + \
             f"Net Assets: {self.net_assets}\n" + \
             f"Current Price: {self.current_price}\n" + \
