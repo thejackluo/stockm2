@@ -1,54 +1,44 @@
 """
-DOCUMENTATION: input.py
+DOCUMENTATION: timeseries.py
 
 INPUT: An array of ALL tickers we want to test
-OUTPUT: An array of stock objects 
+OUTPUT: An array of Time series stock objects - 
+each one contains a 10-year array of the stock objects for the stock so we can do backtesting
 
-STOCK OBJ:
-    - ticker
-    - stock_name
-    - assets
-    - liabilities and long term debt
-    - shares
-    - Current price
 
 FUNCTION
 Our goal is to go through an API and get all the data and produce ______________
 
 This file uses QUICKFS as the API of choice
 
-GOAL:
-Find stocks where the net asset value is as low as possible relative to the current price.
-ratio < 0 - invalid stock - it has negative NAV
-0 < ratio < 1 - great stock
-1 < ratio < 2 - good stock
-2 < ratio - unjustifiable by this model
 
 LIMITATIONS:
 Period end price data is only available to the period end price (end of 2023), can be optimized to end of quarter price, but still not ideal
-Certain stocks break the model - try HE
+Certain stocks break the model
+current price is taken from 1/1/2024 while the rest of the data is from 2023- this is not ideal as I don't why it does that but its intended for backtesting - We can't make decisions retroactively
+This model alone cannot screen for shitty stocks - when NAV is negative#
 """
 
 from dotenv import load_dotenv
 from quickfs import QuickFS
-from util.all_stocks import all_stocks
+# from util.all_stocks import all_stocks
+from obj.TimeSeriesStock import TimeSeriesStock
 from obj.Stock import Stock
 import os
 import json
 import pandas as pd
-#from alphavantagemethods import alpha_vantage_current_price_obtainer
+#from input import create_stock_objects
 
 # S0: Get input (US indexes Russel 1000 + 2000 V2) (S&P 500 V1)
-"""
-# create a list of the three test stocks (1, 5, 12) ticker only no object
-# test_stocks = [all_stocks[1], all_stocks[5], all_stocks[12]] # print the first 3 stock in the all stock list as testing purposes # AAPL, GOOGL, TSLA????
-"""
 
 print("=====================================")
-print("P0: Input Module")
+print("P0: Time series creation base Module")
 print("=====================================") 
 
-test_stocks = all_stocks[:] # test stock list based on all_stocks.py
+test_stocks = ["JEF"]
+#TODO a few stocks fail
+# Works: META, GOOG, TPL, VSAT, YUM, ODFL, XOM, MSFT, GHC, JEF
+# Fails: WEN
 print("S0: Stock List:", test_stocks) 
 
 
@@ -86,13 +76,6 @@ pd_stocks = pd.DataFrame(pd_stocks) # transform it to a pandas dataframe
 #print("S3: test_stocks Pandas DataFrame", pd_stocks) # Output the dataframe to VISUALIZE the data
 
 # S4: create stock objects for the test stocks
-"""
-# using numpy, get the average EPS growth for each stock, and create the stock object for each stock
-# get the most recent eps growth based on teh last eps diluted growth for each stock for inputting into the stock object later\
-# TODO DONE: (update stock name and current price) (currently set name to TEST, and set current price to -1)
-"""
-
-all_stocks = [] # initalize a list of stock objects
 
 def create_stock_objects(tkr,minusyear):
     stock_name = "Test" #resp2.get('metadata', {}).get('name', "Unknown")
@@ -109,13 +92,27 @@ def create_stock_objects(tkr,minusyear):
     # work properly for the assets-liabilities method
     if isinstance(total_current_assets, int) and isinstance(liabilities, int):
         stock = Stock(stock_name, ticker, total_current_assets, liabilities, market_cap, shares, lt_debt, current_price,2024+minusyear) #TODO some stocks don't use 2023 as base year
-        all_stocks.append(stock)
-        print(stock)
-year = -1
-for i in range(len(test_stocks)):
-    tkr = test_stocks[i]
+        return stock
+    return
 
-    create_stock_objects(tkr,year)
+
+def create_stock_TS_objects(ticker):
+    #Create the list that is added to the TSStock object
+    stockobjectlist = []
+    for i in range(1,11):
+        stockyear = create_stock_objects(ticker,-i)
+
+        stockobjectlist.append(stockyear)
+    return stockobjectlist
+
+all_stocks = [] # initalize a list of stock objects
+print("NOTE: current price is taken from 1/1/2024 while the rest of the data is from 2023- this is not ideal as I don't why it does that but its intended for backtesting - We can't make decisions retroactively")
+for i in range(len(test_stocks)):
+    
+    ticker = test_stocks[i]
+    TSStock = TimeSeriesStock(ticker) # An object which contains a list of stock objects for the last 10 years
+    TSStock.yearly_stock_objects = create_stock_TS_objects(ticker)
+    print(TSStock)
 
 '''
 
