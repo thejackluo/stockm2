@@ -32,6 +32,7 @@ class Stock:
         # please print the entire stock object
         return f"Stock: {self.stock_name} ({self.ticker})\n" + \
             f"Average EPS: {self.avg_EPS}\n" + \
+            f"Average PE: {self.avg_PE} ({self.PE})\n" + \
             f"Current Price: {self.current_price}\n" + \
             f"Buy Price: {self.buy_price}\n" + \
             f"Above below: {self.current_price_above_below_buy_price_percent}\n"
@@ -136,12 +137,14 @@ class Stock:
 
     def evaluate(self):
         print(self)
+        '''
         s = f"\nAt the current price of {self.current_price}, the model's projected interest rate is (using average PE) "
         s += str(self.predict_interest_rate())
         s += f"\nUsing the newest PE, {self.PE[-1]}, the model's predicted interest rate is "
         s += str(self.predict_interest_rate(self.PE[-1]))# + f"\nDampener: {self.dampener}\n"
         #s += f"Years of negative EPS Growth: {self.determine_num_of_negative_growths()}\n"
         print(s)
+        '''
 
 
 

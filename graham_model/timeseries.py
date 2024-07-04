@@ -35,10 +35,10 @@ print("=====================================")
 print("P0: Time series creation base Module")
 print("=====================================") 
 
-test_stocks = ["JEF"]
+test_stocks = ["FINV"]
 #TODO a few stocks fail
 # Works: META, GOOG, TPL, VSAT, YUM, ODFL, XOM, MSFT, GHC, JEF
-# Fails: WEN
+# Fails: WEN, YMM, MBLY, TUYA, HUYA
 print("S0: Stock List:", test_stocks) 
 
 
@@ -90,9 +90,10 @@ def create_stock_objects(tkr,minusyear):
     # Check if total_current_assets is an integer - Certain stocks,
     # most notably banks and insurance I think do not
     # work properly for the assets-liabilities method
-    if isinstance(total_current_assets, int) and isinstance(liabilities, int):
+    if isinstance(total_current_assets, int) and isinstance(liabilities, int) and isinstance(shares, int) and shares != 0:
         stock = Stock(stock_name, ticker, total_current_assets, liabilities, market_cap, shares, lt_debt, current_price,2024+minusyear) #TODO some stocks don't use 2023 as base year
         return stock
+    print("Error: ", ticker)
     return
 
 

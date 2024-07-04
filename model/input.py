@@ -87,8 +87,8 @@ print("S3: test_stocks Pandas DataFrame", pd_stocks) # Output the dataframe to V
 all_stocks = [] # initalize a list of stock objects
 
 for i in range(len(test_stocks)):
-    resp2 = client.get_data_full(symbol=test_stocks[i]) #TODO this takes decent amount of time
-    stock_name = resp2.get('metadata', {}).get('name', "Unknown")
+    #resp2 = client.get_data_full(symbol=test_stocks[i]) #TODO this takes decent amount of time
+    stock_name = 'TEST'#resp2.get('metadata', {}).get('name', "Unknown")
     ticker = test_stocks[i]
     current_price = pd_stocks.loc[ticker, 'period_end_price'][-1]# alpha_vantage_current_price_obtainer(ticker)
 
