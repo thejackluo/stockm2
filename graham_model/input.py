@@ -107,7 +107,7 @@ def create_stock_objects(tkr,minusyear):
     # Check if total_current_assets is an integer - Certain stocks,
     # most notably banks and insurance I think do not
     # work properly for the assets-liabilities method
-    if isinstance(total_current_assets, int) and isinstance(liabilities, int):
+    if isinstance(total_current_assets, int) and isinstance(liabilities, int) and isinstance(lt_debt,int) and isinstance(market_cap,int) and (shares != 0):
         stock = Stock(stock_name, ticker, total_current_assets, liabilities, market_cap, shares, lt_debt, current_price,2024+minusyear) #TODO some stocks don't use 2023 as base year
         all_stocks.append(stock)
         print(stock)

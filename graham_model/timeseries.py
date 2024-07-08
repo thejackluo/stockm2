@@ -35,9 +35,9 @@ print("=====================================")
 print("P0: Time series creation base Module")
 print("=====================================") 
 
-test_stocks = ["FINV"]
+test_stocks = ["LULU"]
 #TODO a few stocks fail
-# Works: META, GOOG, TPL, VSAT, YUM, ODFL, XOM, MSFT, GHC, JEF
+# Works: META, GOOG, TPL, VSAT, YUM, ODFL, XOM, MSFT, GHC, JEF, GMAB, LULU
 # Fails: WEN, YMM, MBLY, TUYA, HUYA
 print("S0: Stock List:", test_stocks) 
 

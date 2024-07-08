@@ -22,7 +22,7 @@ when adjusted for the number of shares outstanding
 from input import all_stocks
 
 print("=====================================")
-print("P1: EPS MODULE")
+print("P1: FILTERING MODULE")
 print("=====================================")
 
 # S0: Function definition
