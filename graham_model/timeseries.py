@@ -35,10 +35,10 @@ print("=====================================")
 print("P0: Time series creation base Module")
 print("=====================================") 
 
-test_stocks = ["LULU"]
+test_stocks = ["VIPS"]
 #TODO a few stocks fail
-# Works: META, GOOG, TPL, VSAT, YUM, ODFL, XOM, MSFT, GHC, JEF, GMAB, LULU
-# Fails: WEN, YMM, MBLY, TUYA, HUYA
+# Works: META, GOOG, TPL, VSAT, YUM, ODFL, XOM, MSFT, GHC, JEF, GMAB, LULU,GLPG,NVO,LGL
+# Fails:  C, FINV, 
 print("S0: Stock List:", test_stocks) 
 
 
@@ -75,7 +75,7 @@ pd_stocks = json.loads(client.resp._content.decode('utf-8'))['data'] # filter an
 pd_stocks = pd.DataFrame(pd_stocks) # transform it to a pandas dataframe
 #print("S3: test_stocks Pandas DataFrame", pd_stocks) # Output the dataframe to VISUALIZE the data
 
-# S4: create stock objects for the test stocks
+# S4: create stock time series objects for the test stocks
 
 def create_stock_objects(tkr,minusyear):
     stock_name = "Test" #resp2.get('metadata', {}).get('name', "Unknown")
@@ -90,7 +90,7 @@ def create_stock_objects(tkr,minusyear):
     # Check if total_current_assets is an integer - Certain stocks,
     # most notably banks and insurance I think do not
     # work properly for the assets-liabilities method
-    if isinstance(total_current_assets, int) and isinstance(liabilities, int) and isinstance(shares, int) and shares != 0:
+    if isinstance(total_current_assets, int) and isinstance(liabilities, int) and isinstance(lt_debt,int) and isinstance(market_cap,int) and (shares != 0):
         stock = Stock(stock_name, ticker, total_current_assets, liabilities, market_cap, shares, lt_debt, current_price,2024+minusyear) #TODO some stocks don't use 2023 as base year
         return stock
     print("Error: ", ticker)
@@ -106,38 +106,21 @@ def create_stock_TS_objects(ticker):
         stockobjectlist.append(stockyear)
     return stockobjectlist
 
-all_stocks = [] # initalize a list of stock objects
+all_TS_stocks = [] # init a list of all Time series stocks
 print("NOTE: current price is taken from 1/1/2024 while the rest of the data is from 2023- this is not ideal as I don't why it does that but its intended for backtesting - We can't make decisions retroactively")
 for i in range(len(test_stocks)):
     
     ticker = test_stocks[i]
     TSStock = TimeSeriesStock(ticker) # An object which contains a list of stock objects for the last 10 years
     TSStock.yearly_stock_objects = create_stock_TS_objects(ticker)
-    print(TSStock)
+    #print(TSStock)
+    all_TS_stocks.append(TSStock)
 
-'''
+for i in range(len(all_TS_stocks)):
+    print(all_TS_stocks[i])
 
-print("S4: Stock Objects:") # Print the final stock objects based on the stringto method from all stocks
-for stock in all_stocks:
-    print(stock)
-'''
-
-# S5: See eps.py
-
-
-# ARCHIVES
-"""
-# Stock 1: AAPL
-# AAPL = client.get_data_full(symbol='AAPL:US') 
-# print(AAPL)
-
-# client.get_data_batch(companies=test_stocks, metrics=['eps', 'roic'], period="FY-2:FY") # Example Function
-
-# Old Current Price Retrieval
-# current_price = pd_stocks.loc[ticker, 'period_end_price'][-1] #TODO - uses period end prices (believe it is year end), not the current price
-
-"""
-
-
-
-
+# S5: simulate buying and selling
+print("Buying and selling simulation start")
+for i in range(len(all_TS_stocks)):
+    all_TS_stocks[i].buy_sell()
+        #Starting from the LAST entry of the list and going to the FIRST entry, if VAL is below 1, buy, and if VAL is above 1, sell, if already bought. Calculate the return annualised between BUY and SELL

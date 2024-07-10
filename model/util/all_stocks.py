@@ -1,5 +1,5 @@
 # Objective: export list of stocks for other python modules to use
-all_stocks = ['LULU']
+all_stocks = ['LULU','PLAY']
 #tester for a few stocks
 all_stocks1 = ['SSD','MSFT','IIPR','HDB','UAL']
 #biggest losers fourth of july 24
