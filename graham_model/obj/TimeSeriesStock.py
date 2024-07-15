@@ -21,6 +21,9 @@ class TimeSeriesStock:
         return s
 
     def buy_sell(self):
+        if len(self.yearly_stock_objects) != 10:
+            print(f"Module does not support not 10 years of history stocks! {self.ticker}")
+            return
         total_amount_invested = 0 
         fixed_profit = 0
         buy_year = 0
@@ -31,12 +34,12 @@ class TimeSeriesStock:
         for stock in reversed(self.yearly_stock_objects):
             current_price = stock.current_price
             current_year = stock.year
-            if total_amount_invested == 0 and stock.current_price_above_nav < 0 and stock.current_price_above_nav > -1:  # Check if it's a good buy - this ratio is probably a bit strict as the book is 20 yrs old but we see
+            if total_amount_invested == 0 and stock.current_price_above_nav < 2 and stock.current_price_above_nav > -1:  # Check if it's a good buy - this ratio is probably a bit strict as the book is 20 yrs old but we see
                 print(f"Buying {stock.ticker} on {stock.year} at {stock.current_price}")
                 total_amount_invested += stock.current_price #TODO Standardise every purchase to $1000
                 buy_year = stock.year
                 buy_price = stock.current_price
-            elif total_amount_invested > 0 and stock.current_price_above_nav > 1:  # Check if it's a good sell
+            elif total_amount_invested > 0 and stock.current_price_above_nav > 2:  # Check if it's a good sell
                 print(f"Selling {stock.ticker} on {stock.year} at {stock.current_price}")
                 profit = (stock.current_price - (total_amount_invested)) 
                 print(f"Profit: {profit} Buy: {buy_price} Sell: {stock.current_price}, Annualised Return: {((stock.current_price/buy_price)**(1/(stock.year-buy_year)))}")

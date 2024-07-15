@@ -21,7 +21,7 @@ This model alone cannot screen for shitty stocks - when NAV is negative#
 
 from dotenv import load_dotenv
 from quickfs import QuickFS
-# from util.all_stocks import all_stocks
+from util.all_stocks import all_stocks
 from obj.TimeSeriesStock import TimeSeriesStock
 from obj.Stock import Stock
 import os
@@ -35,10 +35,10 @@ print("=====================================")
 print("P0: Time series creation base Module")
 print("=====================================") 
 
-test_stocks = ["VIPS"]
+test_stocks = ["GAMB"]
 #TODO a few stocks fail
-# Works: META, GOOG, TPL, VSAT, YUM, ODFL, XOM, MSFT, GHC, JEF, GMAB, LULU,GLPG,NVO,LGL
-# Fails:  C, FINV, 
+# Works: META, GOOG, TPL, VSAT, YUM, ODFL, XOM, MSFT, GHC, JEF, GMAB, LULU,GLPG,NVO,LGL,BIDU,PFE,LULU, FINV
+# Fails: C, BAC #TODO BANKS!!!
 print("S0: Stock List:", test_stocks) 
 
 
@@ -93,8 +93,9 @@ def create_stock_objects(tkr,minusyear):
     if isinstance(total_current_assets, int) and isinstance(liabilities, int) and isinstance(lt_debt,int) and isinstance(market_cap,int) and (shares != 0):
         stock = Stock(stock_name, ticker, total_current_assets, liabilities, market_cap, shares, lt_debt, current_price,2024+minusyear) #TODO some stocks don't use 2023 as base year
         return stock
-    print("Error: ", ticker)
-    return
+    #print("Error: ", ticker)
+    stock = Stock("NULL", ticker, 1, 1, 1, 1, 1, current_price,2024+minusyear) 
+    return stock
 
 
 def create_stock_TS_objects(ticker):
@@ -102,8 +103,8 @@ def create_stock_TS_objects(ticker):
     stockobjectlist = []
     for i in range(1,11):
         stockyear = create_stock_objects(ticker,-i)
-
-        stockobjectlist.append(stockyear)
+        if stockyear.stock_name != "NULL":
+            stockobjectlist.append(stockyear)
     return stockobjectlist
 
 all_TS_stocks = [] # init a list of all Time series stocks
@@ -114,7 +115,10 @@ for i in range(len(test_stocks)):
     TSStock = TimeSeriesStock(ticker) # An object which contains a list of stock objects for the last 10 years
     TSStock.yearly_stock_objects = create_stock_TS_objects(ticker)
     #print(TSStock)
-    all_TS_stocks.append(TSStock)
+    if TSStock.yearly_stock_objects[-1] != 'Error':
+        all_TS_stocks.append(TSStock)
+    else:
+        print(f"Rejected stock: {TSStock.ticker}")
 
 for i in range(len(all_TS_stocks)):
     print(all_TS_stocks[i])
@@ -123,4 +127,3 @@ for i in range(len(all_TS_stocks)):
 print("Buying and selling simulation start")
 for i in range(len(all_TS_stocks)):
     all_TS_stocks[i].buy_sell()
-        #Starting from the LAST entry of the list and going to the FIRST entry, if VAL is below 1, buy, and if VAL is above 1, sell, if already bought. Calculate the return annualised between BUY and SELL
