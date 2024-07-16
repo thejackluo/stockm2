@@ -34,7 +34,7 @@ class TimeSeriesStock:
         for stock in reversed(self.yearly_stock_objects):
             current_price = stock.current_price
             current_year = stock.year
-            if total_amount_invested == 0 and stock.current_price_above_nav < 2 and stock.current_price_above_nav > -1:  # Check if it's a good buy - this ratio is probably a bit strict as the book is 20 yrs old but we see
+            if total_amount_invested == 0 and stock.current_price_above_nav < 0 and stock.current_price_above_nav > -1:  # Check if it's a good buy - this ratio is probably a bit strict as the book is 20 yrs old but we see
                 print(f"Buying {stock.ticker} on {stock.year} at {stock.current_price}")
                 total_amount_invested += stock.current_price #TODO Standardise every purchase to $1000
                 buy_year = stock.year

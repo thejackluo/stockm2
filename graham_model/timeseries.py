@@ -35,7 +35,7 @@ print("=====================================")
 print("P0: Time series creation base Module")
 print("=====================================") 
 
-test_stocks = ["GAMB"]
+test_stocks = ["GLPG"]
 #TODO a few stocks fail
 # Works: META, GOOG, TPL, VSAT, YUM, ODFL, XOM, MSFT, GHC, JEF, GMAB, LULU,GLPG,NVO,LGL,BIDU,PFE,LULU, FINV
 # Fails: C, BAC #TODO BANKS!!!
