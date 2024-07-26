@@ -1,9 +1,9 @@
 # Objective: export list of stocks for other python modules to use
-all_stocks = ['SWKS','TGT','TJX','TROW','TRV','TXN','V']
+all_stocks = ['LW']
 #tester for a few stocks
 all_stocks1 = ['SSD','MSFT','IIPR','HDB','UAL']
 #biggest losers fourth of july 24
-all_stocks2 = ['SBUX','UPS','NKE','SBUX','DEO','JD','EL','HSY','KVUE','ABEV','BIIB','BIDU','LVS','ON','BCE','DG','PUK','BBD','TU','LI','ZBH','BNTX','TLK','ALGN','VRSN','LUV','HRL','GMAB','RTO','PODD','SIRI','CNH','MGA','YUMC','SQM','LW','ALB','SJM','LKQ','ZI','IPG','TAP','CHWY','XP','MOS','SOLV','LSCC','COTY','OTEX','CZR','MTCH']
+all_stocks1 = ['CVI','EL','VRSN','MAT','EVH','PTEN','BP','CNH','BMY','BB','WEN','SNA','LAD','CSGP','VTLE','GT','BIO']
 #seeking alpha's fav stocks (48)
 all_stocks4 = ['VIV', 'DESP', 'SKYW', 'NLCP', 'AY', 'STNE', 'UAL', 'CLS', 'ANYYY', 'BAP', 'BBDC', 'BLBD', 'BLX', 'CCAP', 'DLNG', 'DNOW', 'EXPE', 'FNMA', 'FRFHF', 'GAU', 'GDDY', 'IQ', 'KOF', 'PAGP', 'PAGS', 'QFIN', 'ROIV', 'SILV', 'SLVM', 'TKC', 'UNM', 'VIPS', 'VYGR', 'DAL', 'ASC', 'HTGC', 'SBLK', 'FITB', 'FRO', 'VTGN', 'AMWD', 'CHRD', 'GSL', 'HST', 'JAMF', 'OBDC', 'SNX', 'TPR']
 # Approximately 300 stocks here
