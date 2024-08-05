@@ -13,12 +13,15 @@ class Stock:
     max_EPS_growth = 0.50  # this should be experimented with, but less priority
     target_rate = 0.18  # Define target_rate as a class attribute
 
+    WEIGHTED = True
+    weights = [0.5,0.6,0.7,0.8,0.9,1,1.1,1.2,1.3,1.5]
+
     # Attributes
     def __init__(self, stock_name, ticker, EPS_2023, EPS_growth, PE, current_price):
         self.stock_name = stock_name
         self.ticker = ticker
         self.EPS_2023 = EPS_2023
-        self.EPS_growth = EPS_growth # Array of 10yr EPS
+        self.EPS_growth = self.get_EPS_growth(EPS_growth) # If weighted, apply weights
         self.avg_EPS = self.get_average_EPS_growth(EPS_growth) # internal method
         self.PE = PE
         self.avg_PE = self.get_average_PE() # internal method
@@ -31,8 +34,8 @@ class Stock:
     def __str__(self):
         # please print the entire stock object
         return f"Stock: {self.stock_name} ({self.ticker})\n" + \
-            f"Average EPS: {self.avg_EPS}\n" + \
-            f"Average PE: {self.avg_PE} ({self.PE})\n" + \
+            f"Average EPS growth: {self.avg_EPS:.2f} ({', '.join(f'{eps:.2f}' for eps in self.EPS_growth)})\n" + \
+            f"Average PE: {self.avg_PE:.2f} ({', '.join(f'{pe:.2f}' for pe in self.PE)})\n" + \
             f"Current Price: {self.current_price}\n" + \
             f"Buy Price: {self.buy_price}\n" + \
             f"Above below: {self.current_price_above_below_buy_price_percent}\n"
@@ -51,6 +54,17 @@ class Stock:
     def get_average_EPS_growth(EPS_growth):
         EPS_growth = np.clip(EPS_growth, -Stock.max_EPS_growth, Stock.max_EPS_growth)
         return np.mean(EPS_growth)
+    
+    def get_EPS_growth(self,EPS_growth):
+        if self.WEIGHTED == True:
+            newEPS_growth = [0,0,0,0,0,0,0,0,0,0]
+            i = 0
+            for item in EPS_growth:
+                newEPS_growth[i] = item*(self.weights[i])
+                i+= 1
+            return newEPS_growth
+        else:
+            return EPS_growth
     
     # take the percent above or below the buy price that the current price is at
     def get_current_price_above_below_buy_price_percent(self):

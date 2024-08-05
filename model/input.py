@@ -28,6 +28,9 @@ from obj.Stock import Stock
 import os
 import json
 import pandas as pd
+
+
+
 #from alphavantagemethods import alpha_vantage_current_price_obtainer
 
 # S0: Get input (US indexes Russel 1000 + 2000 V2) (S&P 500 V1)
@@ -85,7 +88,6 @@ print("S3: test_stocks Pandas DataFrame", pd_stocks) # Output the dataframe to V
 """
 
 all_stocks = [] # initalize a list of stock objects
-
 for i in range(len(test_stocks)):
     #resp2 = client.get_data_full(symbol=test_stocks[i]) #TODO this takes decent amount of time
     stock_name = 'TEST'#resp2.get('metadata', {}).get('name', "Unknown")
@@ -94,6 +96,7 @@ for i in range(len(test_stocks)):
 
     EPS_2023 = pd_stocks.loc[ticker, 'eps_diluted'][-1]
     EPS_growth = pd_stocks.loc[ticker, 'eps_diluted_growth']
+    #print(EPS_growth)
     PE = pd_stocks.loc[ticker, 'price_to_earnings']
     stock = Stock(stock_name, ticker, EPS_2023, EPS_growth, PE, current_price)
     
