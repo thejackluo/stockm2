@@ -35,7 +35,7 @@ print("=====================================")
 print("P0: Time series creation base Module")
 print("=====================================") 
 
-test_stocks = ['MSFT','C','AAPL']#TODO a few stocks fail
+test_stocks = ['MSFT','C','AAPL','TZOO','META','GECC','NVDA','PEP']#TODO a few stocks fail
 
 print("S0: Stock List:", test_stocks) 
 
@@ -81,11 +81,11 @@ def create_stock_objects(tkr,minusyear):
     current_price = pd_stocks.loc[ticker, 'period_end_price'][minusyear]
     roic = pd_stocks.loc[ticker, 'roic'][minusyear]
     PE = pd_stocks.loc[ticker, 'price_to_earnings'][minusyear]
-    if isinstance(PE, int) and (PE != 0) and (roic != 0):
-        stock = Stock(stock_name, ticker, PE, roic, current_price,2024+minusyear) #TODO some stocks don't use 2023 as base year
-        return stock
-    stock = Stock("NULL", ticker, 1,1, current_price,2024+minusyear) 
+    #if isinstance(PE, int) and (PE != 0) and (roic != 0):
+    stock = Stock(stock_name, ticker, PE, roic, current_price,2024+minusyear) #TODO some stocks don't use 2023 as base year
     return stock
+    #stock = Stock("NULL", ticker, 1,1, current_price,2024+minusyear) 
+    #return stock #TODO this 'else' case breaks the system
 
 
 def create_stock_TS_objects(ticker):
@@ -115,13 +115,12 @@ def determine_rankings(stocks):
     return ranked_stocks
 
 all_TS_stocks = [] # init a list of all Time series stocks
-print("NOTE: current price is taken from 1/1/2024 while the rest of the data is from 2023- this is not ideal as I don't why it does that but its intended for backtesting - We can't make decisions retroactively")
 for i in range(len(test_stocks)):
     ticker = test_stocks[i]
     TSStock = TimeSeriesStock(ticker) # An object which contains a list of stock objects for the last 10 years
     TSStock.yearly_stock_objects = create_stock_TS_objects(ticker)
     #print(TSStock)
-    if TSStock.yearly_stock_objects[-1] != 'Error':
+    if TSStock.yearly_stock_objects[-1].stock_name != 'NULL':
         all_TS_stocks.append(TSStock)
     else:
         print(f"Rejected stock: {TSStock.ticker}")
