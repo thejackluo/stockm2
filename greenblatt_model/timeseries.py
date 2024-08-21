@@ -35,7 +35,7 @@ print("=====================================")
 print("P0: Time series creation base Module")
 print("=====================================") 
 
-test_stocks = ['MSFT','C','AAPL','TZOO','META','GECC','NVDA','PEP']#TODO a few stocks fail
+test_stocks = ['MSFT', 'VEEV', 'NVDA', 'AMZN', 'META', 'GOOGL', 'GOOG', 'SSD', 'LLY', 'AVGO', 'JPM', 'XOM', 'TSLA', 'V', 'UNH', 'MA', 'PG', 'JNJ', 'HD', 'COST', 'MRK', 'ABBV', 'CRM', 'CVX', 'NFLX', 'AMD', 'WMT', 'BAC', 'PEP', 'KO', 'TMO', 'LIN', 'ADBE', 'DIS', 'WFC', 'ACN', 'CSCO', 'MCD', 'ORCL', 'QCOM', 'ABT', 'CAT', 'INTU', 'AMAT', 'GE', 'VZ', 'IBM', 'DHR', 'NOW', 'CMCSA', 'UBER', 'COP', 'TXN', 'INTC', 'PFE', 'AMGN', 'UNP', 'PM', 'ISRG', 'MU', 'SPGI', 'LOW', 'RTX', 'NEE', 'HON', 'ETN', 'GS', 'LRCX', 'AXP', 'BKNG', 'PGR', 'ELV', 'T', 'SYK', 'C', 'NKE', 'PLD', 'MS', 'TJX', 'BLK', 'MDT', 'UPS', 'SCHW', 'DE', 'CI', 'VRTX', 'ADP', 'BSX', 'CB', 'BMY', 'MMC', 'BA', 'LMT', 'SBUX', 'ADI', 'REGN', 'KLAC', 'FI', 'MDLZ', 'BX', 'PANW', 'CVS', 'GILD', 'SNPS', 'TMUS', 'AMT', 'CDNS', 'CMG', 'EOG', 'MPC', 'TGT', 'ICE', 'CME', 'WM', 'SO', 'SHW', 'SLB', 'DUK', 'MO', 'EQIX', 'FCX', 'PH', 'CL', 'PSX', 'CSX', 'PYPL', 'ITW', 'ABNB', 'ZTS', 'MCK', 'BDX', 'ANET', 'TT', 'APH', 'TDG', 'GD', 'USB', 'NOC', 'EMR', 'HCA', 'ORLY', 'PXD', 'MAR', 'FDX', 'PCAR', 'AON', 'CEG', 'NXPI', 'PNC', 'MCO', 'VLO', 'CTAS', 'MSI', 'ROP', 'ECL', 'NSC', 'EW', 'COF', 'DXCM', 'HLT', 'AIG', 'APD', 'AZO', 'ADSK', 'AJG', 'TRV', 'MMM', 'GM', 'WELL', 'F', 'TFC', 'CPRT', 'NUE', 'CARR', 'SPG', 'WMB', 'MCHP', 'ROST', 'OKE', 'URI', 'DHI', 'OXY', 'SMCI', 'NEM', 'JCI', 'TEL', 'ALL', 'SRE', 'O', 'DLR', 'AEP', 'PSA', 'MET', 'IQV', 'AFL', 'GWW', 'STZ', 'HES', 'FTNT', 'FIS', 'CCI', 'KMB', 'AMP', 'BK', 'MSCI', 'AME', 'IDXX', 'A', 'D', 'ROK', 'CDW', 'ADM', 'DG', 'VRSK', 'EL', 'GPN', 'DD', 'PPG', 'MPWR', 'KDP', 'EA', 'XYL', 'ED', 'EFX', 'DFS', 'DAL', 'RCL', 'EXR', 'HIG', 'XEL', 'FICO', 'ANSS', 'FTV', 'VICI', 'BIIB', 'ON', 'KHC', 'WST', 'HSY', 'KEYS', 'MTD', 'RMD', 'WTW', 'EBAY', 'CBRE', 'TSCO', 'EIX', 'WAB', 'DLTR', 'ZBH', 'CAH', 'LYB', 'AVB', 'CHTR', 'TROW', 'TRGP', 'HWM', 'WEC', 'NVR', 'HPQ', 'CHD', 'WY', 'DOV', 'GLW', 'PHM', 'FITB', 'BR', 'NDAQ', 'BLDR', 'STT', 'TTWO', 'WDC', 'RJF', 'AWK', 'ALGN', 'HPE', 'MTB', 'IRM', 'AXON', 'GRMN', 'DTE', 'SMCI', 'DOC', 'AMCR', 'IP', 'WBA', 'RVTY', 'ROL', 'TAP', 'CRL', 'PODD', 'JKHY', 'WRK', 'LNT', 'KIM', 'GEN', 'EVRG', 'IPG', 'JNPR', 'EMN', 'MGM', 'LW', 'KMX', 'AES', 'SJM', 'ALLE', 'FFIV', 'UDR', 'HII', 'NI', 'QRVO', 'AOS', 'TECH', 'CPT', 'APA', 'BBWI', 'CTLT', 'UHS', 'MOS', 'TFX', 'INCY', 'HRL', 'WYNN', 'PAYC', 'REG', 'TPR', 'NWSA', 'DAY', 'HSIC', 'AIZ', 'BF.B', 'MTCH', 'SOLV', 'AAL', 'BXP', 'CZR', 'CPB', 'CHRW', 'PNW', 'GNRC', 'ETSY', 'MKTX', 'BWA', 'RHI', 'FOXA', 'NCLH', 'FRT', 'BEN', 'FMC', 'HAS', 'DVA', 'IVZ', 'CMA', 'RL', 'BIO', 'MHK', 'PARA', 'GL', 'FOX', 'NWS']#TODO a few stocks fail
 
 print("S0: Stock List:", test_stocks) 
 
@@ -81,11 +81,11 @@ def create_stock_objects(tkr,minusyear):
     current_price = pd_stocks.loc[ticker, 'period_end_price'][minusyear]
     roic = pd_stocks.loc[ticker, 'roic'][minusyear]
     PE = pd_stocks.loc[ticker, 'price_to_earnings'][minusyear]
-    #if isinstance(PE, int) and (PE != 0) and (roic != 0):
-    stock = Stock(stock_name, ticker, PE, roic, current_price,2024+minusyear) #TODO some stocks don't use 2023 as base year
-    return stock
-    #stock = Stock("NULL", ticker, 1,1, current_price,2024+minusyear) 
-    #return stock #TODO this 'else' case breaks the system
+    if  (PE != 0) and (roic != 0):
+        stock = Stock(stock_name, ticker, PE, roic, current_price,2024+minusyear) #TODO some stocks don't use 2023 as base year
+        return stock
+    stock = Stock("NULL", ticker, 1,1, current_price,2024+minusyear) 
+    return stock #TODO this 'else' case breaks the system
 
 
 def create_stock_TS_objects(ticker):
@@ -93,8 +93,8 @@ def create_stock_TS_objects(ticker):
     stockobjectlist = []
     for i in range(1,11):
         stockyear = create_stock_objects(ticker,-i)
-        if stockyear.stock_name != "NULL":
-            stockobjectlist.append(stockyear)
+        #print(stockyear)
+        stockobjectlist.append(stockyear)
     return stockobjectlist
 
 
@@ -119,7 +119,6 @@ for i in range(len(test_stocks)):
     ticker = test_stocks[i]
     TSStock = TimeSeriesStock(ticker) # An object which contains a list of stock objects for the last 10 years
     TSStock.yearly_stock_objects = create_stock_TS_objects(ticker)
-    #print(TSStock)
     if TSStock.yearly_stock_objects[-1].stock_name != 'NULL':
         all_TS_stocks.append(TSStock)
     else:

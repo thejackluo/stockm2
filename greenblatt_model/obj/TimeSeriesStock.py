@@ -31,7 +31,7 @@ class TimeSeriesStock:
         current_price = 0
         current_year = 0
         shares = 0
-        THRESHOLD_SCORE = 3 #ADJUST FOR # OF STOCKS WE ARE TESTING!
+        THRESHOLD_SCORE = 25 #ADJUST FOR # OF STOCKS WE ARE TESTING!
         cash_on_hand = 1000
 
         '''
