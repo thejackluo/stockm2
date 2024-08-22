@@ -31,7 +31,7 @@ class TimeSeriesStock:
         current_price = 0
         current_year = 0
         shares = 0
-        THRESHOLD_SCORE = 25 #ADJUST FOR # OF STOCKS WE ARE TESTING!
+        THRESHOLD_SCORE = 3 #ADJUST FOR # OF STOCKS WE ARE TESTING!
         cash_on_hand = 1000
 
         '''
@@ -59,7 +59,7 @@ class TimeSeriesStock:
 
                 print(f"Selling {stock.current_price*shares} ({shares} shares of {stock.ticker} on {stock.year} at {stock.current_price})")
                 shares = 0
-                print(f"Profit: {profit} Buy: {buy_price} Sell: {stock.current_price}, Annualised Return: {((stock.current_price/buy_price)**(1/(stock.year-buy_year)))}")
+                print(f"Profit: {profit} Buy: {buy_price} Sell: {stock.current_price}, Annualised Return: {((stock.current_price/buy_price)**(1/(stock.year-buy_year))-1)}")
                 total_amount_invested = 0
                 buy_year = 0
                 buy_price = 0
@@ -72,5 +72,5 @@ class TimeSeriesStock:
         if shares > 0:
             print(f"Current holdings {current_price*shares} ({shares} shares now at {current_price} from buy at {total_amount_invested}, cost basis {total_amount_invested/shares})")
             if current_year != buy_year:
-                print(f"Annual return on current holdings: {((current_price/buy_price)**(1/(current_year-buy_year)))}")
+                print(f"Annual return on current holdings: {((current_price/buy_price)**(1/(current_year-buy_year))-1)}")
         print("===========================================================================")
