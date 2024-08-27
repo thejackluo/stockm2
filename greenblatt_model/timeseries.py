@@ -35,7 +35,7 @@ print("=====================================")
 print("P0: Time series creation base Module")
 print("=====================================") 
 
-test_stocks = ['MSFT', 'VEEV', 'NVDA', 'AMZN', 'META', 'GOOGL']#TODO a few stocks fail
+test_stocks = ['SBUX','MO','META','AAPL','GOOG','AMZN','NFLX']#TODO a few stocks fail
 
 print("S0: Stock List:", test_stocks) 
 

@@ -54,7 +54,7 @@ class TimeSeriesStock:
                 buy_price = stock.current_price
                 #print(total_amount_invested)
 
-            elif shares != 0 and stock.total_rank_relative > THRESHOLD_SCORE:  # Check if it's a good sell
+            elif shares != 0 and stock.total_rank_relative >= THRESHOLD_SCORE:  # Check if it's a good sell
                 profit = (stock.current_price*shares - (total_amount_invested)) 
 
                 print(f"Selling {stock.current_price*shares} ({shares} shares of {stock.ticker} on {stock.year} at {stock.current_price})")
